@@ -21,17 +21,664 @@
             "AWS Certified Cloud Practitioner (CLF-C02)": [
                 {
                     "q": "What is the AWS shared responsibility model?",
-                    "options": ["AWS manages everything", "Customer manages everything", "AWS manages security OF the cloud, customer manages security IN the cloud", "Shared equally"],
+                    "options": ["AWS manages everything", "Customer manages everything", "AWS manages security OF the cloud, customer manages security IN the cloud", "AWS and customer share all responsibilities equally"],
                     "answer": 2,
-                    "explanation": "AWS handles security OF the cloud, customer handles security IN the cloud."
+                    "explanation": "AWS is responsible for security OF the cloud (physical infrastructure, hardware, managed services), while customers are responsible for security IN the cloud (data, OS, applications, access control)."
                 },
                 {
-                    "q": "Which service is serverless compute?",
-                    "options": ["EC2", "Lambda", "ECS", "EKS"],
+                    "q": "Which AWS service provides a fully managed NoSQL database?",
+                    "options": ["Amazon RDS", "Amazon Redshift", "Amazon DynamoDB", "Amazon Neptune"],
+                    "answer": 2,
+                    "explanation": "Amazon DynamoDB is a serverless, fully managed NoSQL database that supports key-value and document data structures."
+                },
+                {
+                    "q": "What is the primary purpose of Amazon Route 53?",
+                    "options": ["Load balancing", "DNS routing and domain registration", "Content delivery", "Virtual private cloud"],
                     "answer": 1,
-                    "explanation": "AWS Lambda is serverless."
+                    "explanation": "Amazon Route 53 is a scalable DNS web service used for domain registration, DNS routing, and health checking."
+                },
+                {
+                    "q": "Which pricing model offers the greatest savings compared to On-Demand pricing?",
+                    "options": ["Spot Instances", "Reserved Instances", "Savings Plans", "Dedicated Hosts"],
+                    "answer": 2,
+                    "explanation": "Savings Plans offer up to 72% savings over On-Demand pricing with flexible compute options across EC2, Lambda, and Fargate."
+                },
+                {
+                    "q": "Which AWS service allows you to run code without provisioning servers?",
+                    "options": ["Amazon EC2", "AWS Lambda", "Amazon ECS", "AWS Batch"],
+                    "answer": 1,
+                    "explanation": "AWS Lambda is a serverless compute service that runs code in response to events and automatically manages the underlying infrastructure."
+                },
+                {
+                    "q": "What does Amazon S3 provide by default for stored objects?",
+                    "options": ["99.9% availability", "99.99% availability", "99.999999999% durability", "100% durability"],
+                    "answer": 2,
+                    "explanation": "Amazon S3 provides 11 9's (99.999999999%) durability by redundantly storing objects across multiple devices and facilities."
+                },
+                {
+                    "q": "Which service is used to distribute incoming application traffic across multiple targets?",
+                    "options": ["Amazon CloudFront", "Elastic Load Balancing", "AWS Global Accelerator", "Amazon Route 53"],
+                    "answer": 1,
+                    "explanation": "Elastic Load Balancing (ELB) automatically distributes incoming traffic across multiple EC2 instances, containers, or IP addresses."
+                },
+                {
+                    "q": "Which AWS support plan is included at no additional charge?",
+                    "options": ["Developer", "Business", "Basic", "Enterprise"],
+                    "answer": 2,
+                    "explanation": "Basic Support is included for all AWS customers and provides access to documentation, whitepapers, forums, and 24x7 support for billing issues."
+                },
+                {
+                    "q": "What is the main benefit of using Amazon CloudFront?",
+                    "options": ["Reduced latency through edge locations", "Database replication", "Server management", "Block storage"],
+                    "answer": 0,
+                    "explanation": "Amazon CloudFront is a CDN that delivers content with low latency using a global network of edge locations."
+                },
+                {
+                    "q": "Which AWS service provides a managed Hadoop framework?",
+                    "options": ["Amazon EMR", "AWS Glue", "Amazon Redshift", "AWS Data Pipeline"],
+                    "answer": 0,
+                    "explanation": "Amazon EMR (Elastic MapReduce) is a managed service for processing large amounts of data using frameworks like Hadoop, Spark, and Presto."
+                },
+                {
+                    "q": "What does IAM stand for?",
+                    "options": ["Identity and Access Management", "Internet Access Manager", "Instance Access Management", "Identity Authorization Manager"],
+                    "answer": 0,
+                    "explanation": "AWS Identity and Access Management (IAM) securely controls access to AWS services and resources."
+                },
+                {
+                    "q": "Which storage class in S3 is best for long-term archival with retrieval in hours?",
+                    "options": ["S3 Standard-IA", "S3 Glacier Flexible Retrieval", "S3 Glacier Instant Retrieval", "S3 Glacier Deep Archive"],
+                    "answer": 1,
+                    "explanation": "S3 Glacier Flexible Retrieval offers low-cost storage with retrieval times from minutes to hours, ideal for backups and disaster recovery."
+                },
+                {
+                    "q": "Which AWS service helps monitor resources and set alarms?",
+                    "options": ["AWS Config", "Amazon CloudWatch", "AWS CloudTrail", "AWS Trusted Advisor"],
+                    "answer": 1,
+                    "explanation": "Amazon CloudWatch collects metrics, logs, and sets alarms to monitor AWS resources and applications."
+                },
+                {
+                    "q": "Which service records API calls for auditing purposes?",
+                    "options": ["Amazon CloudWatch", "AWS CloudTrail", "AWS X-Ray", "Amazon Inspector"],
+                    "answer": 1,
+                    "explanation": "AWS CloudTrail logs all API calls made in your AWS account for security analysis, compliance auditing, and troubleshooting."
+                },
+                {
+                    "q": "What is the most cost-effective S3 storage class for data accessed once a year?",
+                    "options": ["S3 Standard", "S3 Intelligent-Tiering", "S3 Glacier Flexible Retrieval", "S3 Glacier Deep Archive"],
+                    "answer": 3,
+                    "explanation": "S3 Glacier Deep Archive is the lowest-cost storage class, designed for data accessed once or twice a year with retrieval in 12–48 hours."
+                },
+                {
+                    "q": "Which AWS service provides serverless container management?",
+                    "options": ["Amazon ECS", "AWS Fargate", "Amazon EKS", "AWS Batch"],
+                    "answer": 1,
+                    "explanation": "AWS Fargate allows you to run containers without managing servers or clusters."
+                },
+                {
+                    "q": "Which pillar of the Well-Architected Framework focuses on minimizing costs?",
+                    "options": ["Operational Excellence", "Security", "Cost Optimization", "Reliability"],
+                    "answer": 2,
+                    "explanation": "Cost Optimization pillar helps run systems to deliver business value at the lowest price point."
+                },
+                {
+                    "q": "What is Amazon VPC used for?",
+                    "options": ["Global content delivery", "Isolated virtual network in AWS", "Object storage", "DNS management"],
+                    "answer": 1,
+                    "explanation": "Amazon Virtual Private Cloud (VPC) lets you provision a logically isolated section of the AWS Cloud where you define your own virtual network."
+                },
+                {
+                    "q": "Which service provides a fully managed relational database?",
+                    "options": ["Amazon DynamoDB", "Amazon RDS", "Amazon Redshift", "Amazon DocumentDB"],
+                    "answer": 1,
+                    "explanation": "Amazon RDS makes it easy to set up, operate, and scale relational databases like MySQL, PostgreSQL, Oracle, and SQL Server."
+                },
+                {
+                    "q": "Which AWS tool provides real-time cost and usage recommendations?",
+                    "options": ["AWS Budgets", "AWS Cost Explorer", "Amazon QuickSight", "AWS Cost Anomaly Detection"],
+                    "answer": 1,
+                    "explanation": "AWS Cost Explorer provides detailed visualization and forecasting of your AWS costs and usage."
+                },
+                {
+                    "q": "What does AWS Shield protect against?",
+                    "options": ["Physical server failures", "DDoS attacks", "Data breaches", "Billing fraud"],
+                    "answer": 1,
+                    "explanation": "AWS Shield is a managed DDoS protection service. Standard protection is free; Advanced offers additional features."
+                },
+                {
+                    "q": "Which service enables hybrid cloud storage?",
+                    "options": ["AWS Snowball", "AWS Storage Gateway", "Amazon S3", "AWS Direct Connect"],
+                    "answer": 1,
+                    "explanation": "AWS Storage Gateway connects on-premises environments to cloud storage, supporting hybrid architectures."
+                },
+                {
+                    "q": "Which AWS service is a fully managed extract, transform, and load (ETL) service?",
+                    "options": ["AWS Glue", "AWS Data Pipeline", "Amazon Kinesis", "AWS Batch"],
+                    "answer": 0,
+                    "explanation": "AWS Glue is a serverless ETL service that makes it easy to prepare and load data for analytics."
+                },
+                {
+                    "q": "What is the default retention period for CloudWatch Logs?",
+                    "options": ["30 days", "90 days", "Never expire", "1 year"],
+                    "answer": 2,
+                    "explanation": "CloudWatch Logs retain data indefinitely by default unless a retention policy is set."
+                },
+                {
+                    "q": "Which AWS service provides a managed message broker for pub/sub messaging?",
+                    "options": ["Amazon SQS", "Amazon SNS", "Amazon MQ", "AWS EventBridge"],
+                    "answer": 1,
+                    "explanation": "Amazon Simple Notification Service (SNS) is a fully managed pub/sub messaging service."
+                },
+                {
+                    "q": "What is the purpose of AWS Organizations?",
+                    "options": ["Manage multiple AWS accounts centrally", "Monitor application performance", "Deploy serverless applications", "Store objects"],
+                    "answer": 0,
+                    "explanation": "AWS Organizations helps centrally manage and govern multiple AWS accounts with policies and consolidated billing."
+                },
+                {
+                    "q": "Which service allows you to search and analyze log data?",
+                    "options": ["Amazon CloudSearch", "Amazon OpenSearch Service", "Amazon QuickSight", "AWS X-Ray"],
+                    "answer": 1,
+                    "explanation": "Amazon OpenSearch Service is a managed service for deploying, operating, and scaling OpenSearch for log analytics, application monitoring, etc."
+                },
+                {
+                    "q": "Which AWS service provides a data lake solution?",
+                    "options": ["Amazon S3", "Amazon Redshift", "AWS Lake Formation", "Amazon RDS"],
+                    "answer": 2,
+                    "explanation": "AWS Lake Formation helps build, secure, and manage data lakes on S3 with machine learning capabilities."
+                },
+                {
+                    "q": "Which encryption option is enabled by default in S3?",
+                    "options": ["SSE-S3", "SSE-KMS", "SSE-C", "No encryption"],
+                    "answer": 0,
+                    "explanation": "Server-Side Encryption with Amazon S3-Managed Keys (SSE-S3) is enabled by default for new objects."
+                },
+                {
+                    "q": "What is the maximum size of a single object in Amazon S3?",
+                    "options": ["5 GB", "5 TB", "160 GB", "100 GB"],
+                    "answer": 1,
+                    "explanation": "Amazon S3 supports individual objects up to 5 terabytes in size."
+                },
+                {
+                    "q": "Which service helps automate infrastructure deployment?",
+                    "options": ["AWS CloudFormation", "AWS Elastic Beanstalk", "AWS OpsWorks", "All of the above"],
+                    "answer": 3,
+                    "explanation": "All listed services help with infrastructure automation and deployment in different ways."
+                },
+                {
+                    "q": "Which AWS service is used for real-time data streaming?",
+                    "options": ["Amazon SQS", "Amazon Kinesis", "Amazon MQ", "AWS AppSync"],
+                    "answer": 1,
+                    "explanation": "Amazon Kinesis makes it easy to collect, process, and analyze real-time streaming data."
+                },
+                {
+                    "q": "What does AWS Artifact provide?",
+                    "options": ["Compliance reports and agreements", "Billing information", "Technical documentation", "Code samples"],
+                    "answer": 0,
+                    "explanation": "AWS Artifact provides on-demand access to AWS compliance reports (SOC, PCI, ISO) and agreements."
+                },
+                {
+                    "q": "Which service provides a fully managed graph database?",
+                    "options": ["Amazon RDS", "Amazon Neptune", "Amazon DocumentDB", "Amazon ElastiCache"],
+                    "answer": 1,
+                    "explanation": "Amazon Neptune is a fast, reliable, fully managed graph database service supporting property graph and RDF models."
+                },
+                {
+                    "q": "Which AWS region is in Sydney, Australia?",
+                    "options": ["ap-southeast-2", "ap-southeast-1", "ap-south-1", "ap-northeast-1"],
+                    "answer": 0,
+                    "explanation": "ap-southeast-2 is the AWS Region located in Sydney, Australia."
+                },
+                {
+                    "q": "What is the purpose of Amazon Inspector?",
+                    "options": ["Monitor network traffic", "Assess applications for security vulnerabilities", "Manage SSL certificates", "Encrypt data"],
+                    "answer": 1,
+                    "explanation": "Amazon Inspector automatically assesses applications for exposure, vulnerabilities, and deviations from best practices."
+                },
+                {
+                    "q": "Which service provides a managed Redis and Memcached compatible cache?",
+                    "options": ["Amazon ElastiCache", "Amazon DAX", "Amazon MemoryDB", "Amazon Redshift"],
+                    "answer": 0,
+                    "explanation": "Amazon ElastiCache is a managed in-memory caching service supporting Redis and Memcached."
+                },
+                {
+                    "q": "What does AWS WAF protect against?",
+                    "options": ["DDoS attacks", "SQL injection and XSS", "Phishing", "Malware"],
+                    "answer": 1,
+                    "explanation": "AWS WAF is a web application firewall that protects against common web exploits like SQL injection and cross-site scripting (XSS)."
+                },
+                {
+                    "q": "Which service helps migrate databases to AWS with minimal downtime?",
+                    "options": ["AWS DMS", "AWS SMS", "AWS Snowball", "AWS DataSync"],
+                    "answer": 0,
+                    "explanation": "AWS Database Migration Service (DMS) helps migrate databases to AWS quickly and securely with minimal downtime."
+                },
+                {
+                    "q": "Which AWS service provides business intelligence and dashboards?",
+                    "options": ["Amazon QuickSight", "AWS Glue", "Amazon Redshift", "AWS Data Pipeline"],
+                    "answer": 0,
+                    "explanation": "Amazon QuickSight is a fast, cloud-powered business intelligence service for creating visualizations and dashboards."
+                },
+                {
+                    "q": "What is the main benefit of using Spot Instances?",
+                    "options": ["High availability", "Up to 90% cost savings", "Long-term commitment", "Dedicated hardware"],
+                    "answer": 1,
+                    "explanation": "Spot Instances allow you to bid on unused EC2 capacity for up to 90% savings compared to On-Demand pricing."
+                },
+                {
+                    "q": "Which service provides a fully managed workflow orchestration?",
+                    "options": ["AWS Step Functions", "Amazon SWF", "AWS Batch", "AWS Glue Workflows"],
+                    "answer": 0,
+                    "explanation": "AWS Step Functions lets you coordinate multiple AWS services into serverless workflows using visual interfaces."
+                },
+                {
+                    "q": "Which AWS service provides encrypted file storage for EC2 instances?",
+                    "options": ["Amazon EBS", "Amazon EFS", "Amazon FSx", "Amazon S3"],
+                    "answer": 0,
+                    "explanation": "Amazon Elastic Block Store (EBS) provides persistent block storage volumes for EC2 with encryption support."
+                },
+                {
+                    "q": "What is the purpose of Amazon Macie?",
+                    "options": ["Discover and protect sensitive data", "Encrypt data at rest", "Manage access policies", "Monitor network traffic"],
+                    "answer": 0,
+                    "explanation": "Amazon Macie uses machine learning to automatically discover, classify, and protect sensitive data in S3."
+                },
+                {
+                    "q": "Which service allows you to connect on-premises networks directly to AWS?",
+                    "options": ["AWS VPN", "AWS Direct Connect", "AWS Transit Gateway", "AWS Site-to-Site VPN"],
+                    "answer": 1,
+                    "explanation": "AWS Direct Connect provides a dedicated network connection from on-premises to AWS for consistent, high-bandwidth connectivity."
+                },
+                {
+                    "q": "Which AWS service is a fully managed PostgreSQL and MySQL compatible database with high performance?",
+                    "options": ["Amazon RDS", "Amazon Aurora", "Amazon Redshift", "Amazon DocumentDB"],
+                    "answer": 1,
+                    "explanation": "Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for the cloud with high performance and availability."
+                },
+                {
+                    "q": "Which tool provides automated security best practice checks?",
+                    "options": ["AWS Trusted Advisor", "AWS Config", "Amazon Inspector", "AWS Shield"],
+                    "answer": 0,
+                    "explanation": "AWS Trusted Advisor provides recommendations across cost optimization, performance, security, fault tolerance, and service limits."
+                },
+                {
+                    "q": "What is the default port for HTTPS?",
+                    "options": ["80", "443", "22", "3389"],
+                    "answer": 1,
+                    "explanation": "Port 443 is the standard port for HTTPS traffic."
+                },
+                {
+                    "q": "Which service provides a fully managed Active Directory?",
+                    "options": ["AWS Directory Service", "AWS IAM Identity Center", "Amazon Cognito", "AWS Organizations"],
+                    "answer": 0,
+                    "explanation": "AWS Directory Service (AWS Managed Microsoft AD) allows you to run Microsoft Active Directory as a managed service."
+                },
+                {
+                    "q": "Which AWS service helps reduce latency by caching content at edge locations?",
+                    "options": ["Amazon CloudFront", "AWS Global Accelerator", "Amazon Route 53", "Elastic Load Balancing"],
+                    "answer": 0,
+                    "explanation": "CloudFront caches content at edge locations worldwide to reduce latency for viewers."
+                },
+                {
+                    "q": "What is the purpose of AWS Budgets?",
+                    "options": ["Track and alert on AWS costs", "Automatically reduce costs", "Pay bills", "Forecast future usage"],
+                    "answer": 0,
+                    "explanation": "AWS Budgets allows you to set custom cost and usage budgets and receive alerts when thresholds are exceeded."
+                },
+                {
+                    "q": "Which service is best for hosting static websites?",
+                    "options": ["Amazon EC2", "Amazon S3", "AWS Amplify", "AWS Lightsail"],
+                    "answer": 1,
+                    "explanation": "Amazon S3 can host static websites directly with custom domain, HTTPS, and global availability."
+                },
+                {
+                    "q": "Which AWS service provides a fully managed MongoDB-compatible database?",
+                    "options": ["Amazon RDS", "Amazon DynamoDB", "Amazon DocumentDB", "Amazon Neptune"],
+                    "answer": 2,
+                    "explanation": "Amazon DocumentDB is a fully managed document database service compatible with MongoDB workloads."
+                },
+                {
+                    "q": "What does MFA stand for in AWS?",
+                    "options": ["Multi-Factor Authentication", "Managed Firewall Access", "Multiple File Access", "Master File Authorization"],
+                    "answer": 0,
+                    "explanation": "Multi-Factor Authentication (MFA) adds an extra layer of security by requiring a code from a device in addition to password."
+                },
+                {
+                    "q": "Which service helps connect VPCs and on-premises networks centrally?",
+                    "options": ["AWS Direct Connect", "AWS Transit Gateway", "VPC Peering", "AWS VPN"],
+                    "answer": 1,
+                    "explanation": "AWS Transit Gateway acts as a hub to interconnect VPCs and on-premises networks via a single gateway."
+                },
+                {
+                    "q": "Which AWS service provides serverless real-time data processing?",
+                    "options": ["AWS Lambda", "Amazon Kinesis Data Analytics", "AWS Glue", "Amazon EMR"],
+                    "answer": 1,
+                    "explanation": "Kinesis Data Analytics processes and analyzes streaming data in real time using SQL or Apache Flink."
+                },
+                {
+                    "q": "What is the purpose of Amazon GuardDuty?",
+                    "options": ["Threat detection using machine learning", "Web application firewall", "DDoS protection", "Encryption key management"],
+                    "answer": 0,
+                    "explanation": "Amazon GuardDuty is a threat detection service that continuously monitors for malicious activity and unauthorized behavior."
+                },
+                {
+                    "q": "Which service manages SSL/TLS certificates?",
+                    "options": ["AWS Certificate Manager", "AWS KMS", "AWS Secrets Manager", "Amazon Route 53"],
+                    "answer": 0,
+                    "explanation": "AWS Certificate Manager (ACM) provisions, manages, and deploys public and private SSL/TLS certificates."
+                },
+                {
+                    "q": "Which pricing model requires a 1 or 3-year commitment?",
+                    "options": ["On-Demand", "Spot Instances", "Reserved Instances", "Savings Plans"],
+                    "answer": 2,
+                    "explanation": "Reserved Instances provide significant discounts in exchange for a 1 or 3-year commitment to a specific instance type."
+                },
+                {
+                    "q": "Which service provides a fully managed file system for Windows?",
+                    "options": ["Amazon EFS", "Amazon FSx for Windows File Server", "Amazon S3", "AWS Storage Gateway"],
+                    "answer": 1,
+                    "explanation": "Amazon FSx for Windows File Server provides fully managed Windows-based file storage with SMB protocol support."
+                },
+                {
+                    "q": "What is the purpose of AWS Config?",
+                    "options": ["Monitor performance", "Record configuration changes", "Manage costs", "Encrypt data"],
+                    "answer": 1,
+                    "explanation": "AWS Config records the configuration history of your AWS resources and evaluates them against desired configurations."
+                },
+                {
+                    "q": "Which service provides in-memory data store for ultra-low latency?",
+                    "options": ["Amazon ElastiCache", "Amazon RDS", "Amazon Redshift", "Amazon S3"],
+                    "answer": 0,
+                    "explanation": "ElastiCache provides sub-millisecond latency for real-time applications using Redis or Memcached."
+                },
+                {
+                    "q": "Which AWS service is used to send email?",
+                    "options": ["Amazon SNS", "Amazon SES", "Amazon SQS", "Amazon Pinpoint"],
+                    "answer": 1,
+                    "explanation": "Amazon Simple Email Service (SES) is a cost-effective email platform for sending transactional and marketing emails."
+                },
+                {
+                    "q": "What is the purpose of AWS Snowball?",
+                    "options": ["Edge computing", "Large-scale data migration", "Real-time streaming", "Serverless computing"],
+                    "answer": 1,
+                    "explanation": "AWS Snowball is a physical device for transferring petabytes of data into and out of AWS."
+                },
+                {
+                    "q": "Which service helps with user sign-up and sign-in?",
+                    "options": ["AWS IAM", "Amazon Cognito", "AWS Directory Service", "AWS SSO"],
+                    "answer": 1,
+                    "explanation": "Amazon Cognito provides authentication, authorization, and user management for web and mobile apps."
+                },
+                {
+                    "q": "Which AWS service provides a fully managed Kubernetes service?",
+                    "options": ["Amazon ECS", "AWS Fargate", "Amazon EKS", "AWS Batch"],
+                    "answer": 2,
+                    "explanation": "Amazon Elastic Kubernetes Service (EKS) makes it easy to run Kubernetes on AWS without managing the control plane."
+                },
+                {
+                    "q": "What is the purpose of AWS Key Management Service (KMS)?",
+                    "options": ["Create and control encryption keys", "Manage SSH keys", "Store passwords", "Authenticate users"],
+                    "answer": 0,
+                    "explanation": "AWS KMS helps create and manage cryptographic keys for encrypting data across AWS services."
+                },
+                {
+                    "q": "Which service provides a fully managed data catalog?",
+                    "options": ["AWS Glue Data Catalog", "Amazon S3", "AWS Lake Formation", "Amazon Athena"],
+                    "answer": 0,
+                    "explanation": "The AWS Glue Data Catalog is a fully managed metadata repository for storing table definitions and schema."
+                },
+                {
+                    "q": "Which AWS service allows querying data in S3 using SQL?",
+                    "options": ["Amazon Redshift Spectrum", "Amazon Athena", "AWS Glue", "Amazon QuickSight"],
+                    "answer": 1,
+                    "explanation": "Amazon Athena is a serverless interactive query service to analyze data in S3 using standard SQL."
+                },
+                {
+                    "q": "What is the purpose of Amazon EventBridge?",
+                    "options": ["Event-driven architecture", "Message queuing", "Workflow orchestration", "Real-time streaming"],
+                    "answer": 0,
+                    "explanation": "Amazon EventBridge is a serverless event bus that connects applications using events from AWS services, SaaS, and custom sources."
+                },
+                {
+                    "q": "Which service provides durable key-value storage for session data?",
+                    "options": ["Amazon DynamoDB", "Amazon ElastiCache", "Amazon EBS", "Amazon S3"],
+                    "answer": 1,
+                    "explanation": "Amazon ElastiCache is commonly used for session storage due to its ultra-low latency and in-memory performance."
+                },
+                {
+                    "q": "Which AWS service is used for contact center solutions?",
+                    "options": ["Amazon Connect", "Amazon Chime", "Amazon WorkMail", "Amazon Pinpoint"],
+                    "answer": 0,
+                    "explanation": "Amazon Connect is a cloud-based contact center service that scales to support millions of customer interactions."
+                },
+                {
+                    "q": "What is the purpose of AWS AppSync?",
+                    "options": ["Real-time and offline data synchronization", "Serverless compute", "Container orchestration", "Database migration"],
+                    "answer": 0,
+                    "explanation": "AWS AppSync is a managed GraphQL service that simplifies building scalable APIs with real-time and offline capabilities."
+                },
+                {
+                    "q": "Which service provides machine learning inference at the edge?",
+                    "options": ["AWS Lambda@Edge", "AWS Outposts", "AWS Greengrass", "AWS Snowcone"],
+                    "answer": 2,
+                    "explanation": "AWS Greengrass extends AWS to edge devices so they can run Lambda functions and ML inference locally."
+                },
+                {
+                    "q": "Which AWS service helps deploy and manage applications across hybrid environments?",
+                    "options": ["AWS Outposts", "AWS Local Zones", "AWS Wavelength", "AWS Snow Family"],
+                    "answer": 0,
+                    "explanation": "AWS Outposts brings AWS services, infrastructure, and operating models to on-premises facilities."
+                },
+                {
+                    "q": "What is the purpose of Amazon Rekognition?",
+                    "options": ["Image and video analysis", "Text-to-speech", "Speech-to-text", "Language translation"],
+                    "answer": 0,
+                    "explanation": "Amazon Rekognition is a deep learning service for image and video analysis (face detection, object recognition, etc.)."
+                },
+                {
+                    "q": "Which service provides natural language understanding?",
+                    "options": ["Amazon Comprehend", "Amazon Translate", "Amazon Polly", "Amazon Transcribe"],
+                    "answer": 0,
+                    "explanation": "Amazon Comprehend uses NLP to extract insights like entities, sentiment, and topics from text."
+                },
+                {
+                    "q": "What is the purpose of AWS IAM Identity Center (formerly AWS SSO)?",
+                    "options": ["Single sign-on across AWS accounts and applications", "Manage EC2 instances", "Store secrets", "Encrypt data"],
+                    "answer": 0,
+                    "explanation": "IAM Identity Center enables centralized management of workforce access to multiple AWS accounts and applications."
+                },
+                {
+                    "q": "Which service helps forecast future AWS costs?",
+                    "options": ["AWS Budgets", "AWS Cost Explorer", "AWS Cost Anomaly Detection", "AWS Savings Plans"],
+                    "answer": 1,
+                    "explanation": "AWS Cost Explorer provides forecasting capabilities based on historical usage patterns."
+                },
+                {
+                    "q": "Which AWS service provides a fully managed blockchain network?",
+                    "options": ["Amazon Managed Blockchain", "Amazon Quantum Ledger Database (QLDB)", "Amazon Aurora", "Amazon Neptune"],
+                    "answer": 0,
+                    "explanation": "Amazon Managed Blockchain supports Hyperledger Fabric and Ethereum for creating scalable blockchain networks."
+                },
+                {
+                    "q": "What is the purpose of Amazon QLDB?",
+                    "options": ["Immutable and cryptographically verifiable ledger", "NoSQL database", "Relational database", "In-memory cache"],
+                    "answer": 0,
+                    "explanation": "Amazon Quantum Ledger Database (QLDB) provides a transparent, immutable, and verifiable transaction log."
+                },
+                {
+                    "q": "Which service provides serverless application hosting with CI/CD?",
+                    "options": ["AWS Amplify", "AWS App Runner", "AWS Elastic Beanstalk", "AWS Lightsail"],
+                    "answer": 0,
+                    "explanation": "AWS Amplify provides a complete workflow for developing, deploying, and hosting serverless web and mobile apps."
+                },
+                {
+                    "q": "Which AWS service is ideal for running containerized applications with automatic scaling?",
+                    "options": ["AWS Fargate", "Amazon EC2", "AWS Batch", "AWS Outposts"],
+                    "answer": 0,
+                    "explanation": "AWS Fargate is serverless container compute with automatic scaling and no server management."
+                },
+                {
+                    "q": "What is the primary benefit of using Amazon S3 Transfer Acceleration?",
+                    "options": ["Faster global uploads using edge locations", "Lower storage costs", "Higher durability", "Automatic encryption"],
+                    "answer": 0,
+                    "explanation": "S3 Transfer Acceleration uses CloudFront edge locations to speed up uploads to S3 buckets from distant locations."
+                },
+                {
+                    "q": "Which service provides a fully managed disaster recovery solution?",
+                    "options": ["AWS Elastic Disaster Recovery", "AWS Backup", "Amazon RDS Multi-AZ", "AWS Snowball"],
+                    "answer": 0,
+                    "explanation": "AWS Elastic Disaster Recovery (DRS) minimizes downtime and data loss with fast, reliable recovery of on-premises and cloud applications."
+                },
+                {
+                    "q": "What does Amazon SageMaker help with?",
+                    "options": ["Building, training, and deploying ML models", "Running containers", "Storing data", "Managing VPCs"],
+                    "answer": 0,
+                    "explanation": "Amazon SageMaker is a fully managed service for building, training, and deploying machine learning models at scale."
+                },
+                {
+                    "q": "Which service provides real-time translation?",
+                    "options": ["Amazon Translate", "Amazon Transcribe", "Amazon Polly", "Amazon Lex"],
+                    "answer": 0,
+                    "explanation": "Amazon Translate is a neural machine translation service for real-time and batch translation."
+                },
+                {
+                    "q": "What is the purpose of Amazon Lex?",
+                    "options": ["Conversational interfaces (chatbots)", "Text-to-speech", "Speech-to-text", "Image analysis"],
+                    "answer": 0,
+                    "explanation": "Amazon Lex powers conversational interfaces using voice and text (same technology as Alexa)."
+                },
+                {
+                    "q": "Which service provides speech-to-text functionality?",
+                    "options": ["Amazon Polly", "Amazon Transcribe", "Amazon Translate", "Amazon Comprehend"],
+                    "answer": 1,
+                    "explanation": "Amazon Transcribe automatically converts speech to text using deep learning."
+                },
+                {
+                    "q": "What is the purpose of Amazon Polly?",
+                    "options": ["Text-to-speech", "Speech-to-text", "Language translation", "Sentiment analysis"],
+                    "answer": 0,
+                    "explanation": "Amazon Polly turns text into lifelike speech using advanced deep learning technologies."
+                },
+                {
+                    "q": "Which service helps manage secrets and configuration data?",
+                    "options": ["AWS Secrets Manager", "AWS Parameter Store", "AWS KMS", "AWS Config"],
+                    "answer": 0,
+                    "explanation": "AWS Secrets Manager helps protect access to applications, services, and IT resources by managing secrets."
+                },
+                {
+                    "q": "Which AWS service is used for large-scale data transfer over long distances?",
+                    "options": ["AWS Snowmobile", "AWS Snowball Edge", "AWS DataSync", "AWS Direct Connect"],
+                    "answer": 0,
+                    "explanation": "AWS Snowmobile is an exabyte-scale data transfer service using a 45-foot ruggedized shipping container."
+                },
+                {
+                    "q": "Which service provides a fully managed CI/CD pipeline?",
+                    "options": ["AWS CodePipeline", "AWS CodeDeploy", "AWS CodeBuild", "AWS CodeStar"],
+                    "answer": 0,
+                    "explanation": "AWS CodePipeline is a fully managed continuous delivery service for automating release pipelines."
+                },
+                {
+                    "q": "What is the purpose of AWS Cloud Development Kit (CDK)?",
+                    "options": ["Define cloud infrastructure using code", "Run serverless applications", "Monitor performance", "Store data"],
+                    "answer": 0,
+                    "explanation": "AWS CDK allows you to define cloud infrastructure using familiar programming languages."
+                },
+                {
+                    "q": "Which service provides a fully managed extract, transform, load (ETL) with serverless scaling?",
+                    "options": ["AWS Glue", "AWS Data Pipeline", "Amazon EMR", "AWS Batch"],
+                    "answer": 0,
+                    "explanation": "AWS Glue is a serverless ETL service that automatically scales to meet workload demands."
+                },
+                {
+                    "q": "Which AWS service is best for running batch computing workloads?",
+                    "options": ["AWS Batch", "AWS Lambda", "Amazon ECS", "AWS Fargate"],
+                    "answer": 0,
+                    "explanation": "AWS Batch enables developers to run batch computing workloads on AWS with automatic scaling."
+                },
+                {
+                    "q": "What is the purpose of Amazon Chime?",
+                    "options": ["Online meetings and video conferencing", "Email service", "Contact center", "File storage"],
+                    "answer": 0,
+                    "explanation": "Amazon Chime is a communications service for online meetings, video conferencing, and business calling."
+                },
+                {
+                    "q": "Which service provides a fully managed data warehouse with columnar storage?",
+                    "options": ["Amazon RDS", "Amazon Redshift", "Amazon Aurora", "Amazon DynamoDB"],
+                    "answer": 1,
+                    "explanation": "Amazon Redshift is a fully managed, petabyte-scale data warehouse using columnar storage for fast analytics."
+                },
+                {
+                    "q": "Which AWS service helps with application load testing?",
+                    "options": ["AWS Device Farm", "AWS X-Ray", "AWS Cloud9", "Amazon CloudWatch Synthetics"],
+                    "answer": 3,
+                    "explanation": "CloudWatch Synthetics allows you to create canaries to monitor endpoints and APIs."
+                },
+                {
+                    "q": "What is the purpose of AWS Ground Station?",
+                    "options": ["Satellite communication", "Edge computing", "IoT device management", "Blockchain"],
+                    "answer": 0,
+                    "explanation": "AWS Ground Station is a fully managed service for controlling satellite communications and processing satellite data."
+                },
+                {
+                    "q": "Which service provides a fully managed time-series database?",
+                    "options": ["Amazon Timestream", "Amazon Neptune", "Amazon QLDB", "Amazon DocumentDB"],
+                    "answer": 0,
+                    "explanation": "Amazon Timestream is a fast, scalable, serverless time-series database for IoT and operational applications."
+                },
+                {
+                    "q": "Which AWS service is designed for IoT device management?",
+                    "options": ["AWS IoT Core", "AWS Greengrass", "AWS IoT Device Management", "AWS IoT Analytics"],
+                    "answer": 2,
+                    "explanation": "AWS IoT Device Management helps onboard, organize, monitor, and remotely manage IoT devices at scale."
+                },
+                {
+                    "q": "What is the purpose of Amazon Location Service?",
+                    "options": ["Add location functionality to applications", "Track AWS resources", "Monitor user location", "Geofence hardware"],
+                    "answer": 0,
+                    "explanation": "Amazon Location Service helps add maps, geocoding, routing, tracking, and geofencing to applications."
+                },
+                {
+                    "q": "Which service provides a fully managed fraud detection solution?",
+                    "options": ["Amazon Fraud Detector", "Amazon GuardDuty", "Amazon Inspector", "AWS WAF"],
+                    "answer": 0,
+                    "explanation": "Amazon Fraud Detector uses machine learning to identify potentially fraudulent online activities."
+                },
+                {
+                    "q": "Which AWS service helps with contact and campaign management?",
+                    "options": ["Amazon Pinpoint", "Amazon SES", "Amazon SNS", "Amazon Connect"],
+                    "answer": 0,
+                    "explanation": "Amazon Pinpoint helps send targeted email, SMS, push notifications, and voice messages to customers."
+                },
+                {
+                    "q": "What is the purpose of AWS App2Container?",
+                    "options": ["Containerize and migrate legacy applications", "Run containers on EC2", "Deploy serverless apps", "Monitor containers"],
+                    "answer": 0,
+                    "explanation": "AWS App2Container automates the process of containerizing and migrating .NET and Java applications to AWS."
+                },
+                {
+                    "q": "Which service provides a fully managed message queue compatible with Apache ActiveMQ?",
+                    "options": ["Amazon SQS", "Amazon SNS", "Amazon MQ", "AWS EventBridge"],
+                    "answer": 2,
+                    "explanation": "Amazon MQ is a managed message broker service for ActiveMQ and RabbitMQ."
+                },
+                {
+                    "q": "Which AWS service provides a fully managed Redis-compatible durable database?",
+                    "options": ["Amazon ElastiCache", "Amazon MemoryDB for Redis", "Amazon DynamoDB", "Amazon DocumentDB"],
+                    "answer": 1,
+                    "explanation": "MemoryDB for Redis is a Redis-compatible, durable, in-memory database service."
+                },
+                {
+                    "q": "What is the purpose of AWS Proton?",
+                    "options": ["Platform for deploying modern applications", "Container registry", "Serverless framework", "Infrastructure provisioning"],
+                    "answer": 0,
+                    "explanation": "AWS Proton is a delivery service for container and serverless applications used by platform teams."
+                },
+                {
+                    "q": "Which service provides a fully managed development environment in the cloud?",
+                    "options": ["AWS Cloud9", "AWS CodeStar", "AWS AppSync", "AWS Amplify"],
+                    "answer": 0,
+                    "explanation": "AWS Cloud9 is a cloud-based IDE for writing, running, and debugging code."
                 }
-                // ← Add all your 120+ questions here — they will work perfectly
             ],
             "AWS Certified Solutions Architect – Associate (SAA-C03)": [],
             "AWS Certified Developer – Associate (DVA-C02)": [],
