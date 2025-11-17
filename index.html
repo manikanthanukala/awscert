@@ -19,10 +19,19 @@
     <script>
         const certificationQuestions = {
             "AWS Certified Cloud Practitioner (CLF-C02)": [
-                // ← Your full 120+ questions go here — all safe!
-                { "q": "What is the AWS shared responsibility model?", "options": ["AWS manages everything", "Customer manages everything", "AWS manages security OF the cloud, customer manages security IN the cloud", "Shared equally"], "answer": 2, "explanation": "AWS handles security OF the cloud..." },
-                { "q": "Which service is serverless?", "options": ["EC2", "Lambda", "ECS", "EKS"], "answer": 1, "explanation": "AWS Lambda is serverless compute." }
-                // ... rest of your questions
+                {
+                    "q": "What is the AWS shared responsibility model?",
+                    "options": ["AWS manages everything", "Customer manages everything", "AWS manages security OF the cloud, customer manages security IN the cloud", "Shared equally"],
+                    "answer": 2,
+                    "explanation": "AWS handles security OF the cloud, customer handles security IN the cloud."
+                },
+                {
+                    "q": "Which service is serverless compute?",
+                    "options": ["EC2", "Lambda", "ECS", "EKS"],
+                    "answer": 1,
+                    "explanation": "AWS Lambda is serverless."
+                }
+                // ← Add all your 120+ questions here — they will work perfectly
             ],
             "AWS Certified Solutions Architect – Associate (SAA-C03)": [],
             "AWS Certified Developer – Associate (DVA-C02)": [],
@@ -31,13 +40,151 @@
             "AWS Certified Solutions Architect – Professional (SAP-C02)": []
         };
 
-        // All your existing variables and functions remain the same...
         let selectedCert = null, currentQuestions = [], userAnswers = {}, stats = { correct: 0, wrong: 0, answered: 0 };
         let timeLeft = 130 * 60, timerInterval = null, timeUp = false, reviewMode = false;
         const STORAGE_KEY = 'aws-practice-progress';
 
-        // (save/load/clear/startExam etc. — unchanged, keeping short for clarity)
-        // ... [all your existing functions here — exactly as before] ...
+        function saveProgress() {
+            const progress = { selectedCert, currentQuestions, userAnswers, stats, timeLeft, timestamp: Date.now() };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+        }
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return false;
+            try {
+                const p = JSON.parse(saved);
+                if (Date.now() - p.timestamp > 24*60*60*1000) { localStorage.removeItem(STORAGE_KEY); return false; }
+                selectedCert = p.selectedCert; currentQuestions = p.currentQuestions; userAnswers = p.userAnswers;
+                stats = p.stats; timeLeft = p.timeLeft;
+                renderExamScreen(); startTimer();
+                alert("Welcome back! Resuming your exam.");
+                return true;
+            } catch(e) { localStorage.removeItem(STORAGE_KEY); return false; }
+        }
+        function clearProgress() { localStorage.removeItem(STORAGE_KEY); }
+
+        function prepareQuestions(cert) {
+            const all = certificationQuestions[cert] || [];
+            const shuffled = [...all].sort(() => 0.5 - Math.random());
+            currentQuestions = shuffled.slice(0, Math.min(130, shuffled.length));
+        }
+
+        function startExam(cert) {
+            selectedCert = cert;
+            prepareQuestions(cert);
+            userAnswers = {}; stats = { correct: 0, wrong: 0, answered: 0 };
+            timeLeft = 130 * 60; timeUp = false; reviewMode = false;
+            clearProgress();
+            renderExamScreen();
+            startTimer();
+        }
+
+        function retryExam() {
+            prepareQuestions(selectedCert);
+            userAnswers = {}; stats = { correct: 0, wrong: 0, answered: 0 };
+            timeLeft = 130 * 60; timeUp = false; reviewMode = false;
+            document.getElementById('resultModal')?.classList.add('hidden');
+            renderExamScreen();
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                saveProgress();
+                if (timeLeft <= 0) { clearInterval(timerInterval); timeUp = true; showResults(); }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const el = document.getElementById('timer');
+            if (el) el.textContent = `${String(Math.floor(timeLeft / 60)).padStart(2,'0')}:${String(timeLeft % 60).padStart(2,'0')}`;
+        }
+
+        function selectAnswer(qIdx, optIdx) {
+            if (timeUp || reviewMode || userAnswers[qIdx] !== undefined) return;
+            const correct = optIdx === currentQuestions[qIdx].answer;
+            userAnswers[qIdx] = optIdx;
+            stats.answered++;
+            if (correct) stats.correct++; else stats.wrong++;
+            renderQuestion(qIdx);
+            updateStats();
+            saveProgress();
+        }
+
+        function updateStats() {
+            document.getElementById('correctCount')?.then(el => el.textContent = stats.correct);
+            document.getElementById('wrongCount')?.then(el => el.textContent = stats.wrong);
+            const perc = stats.answered > 0 ? Math.round((stats.correct / stats.answered) * 100) : 0;
+            document.getElementById('scorePercent')?.then(el => el.textContent = perc + '%');
+            document.getElementById('progressText')?.then(el => el.textContent = stats.answered + '/' + currentQuestions.length);
+            const fill = document.getElementById('progressFill');
+            if (fill) fill.style.width = (stats.answered / currentQuestions.length) * 100 + '%';
+        }
+
+        function renderQuestion(idx) {
+            const q = currentQuestions[idx];
+            const ans = userAnswers[idx];
+            const answered = ans !== undefined;
+            const correct = answered && ans === q.answer;
+            const el = document.getElementById(`question-${idx}`);
+            if (!el) return;
+
+            let optionsHTML = '';
+            q.options.forEach((opt, i) => {
+                const selected = ans === i;
+                const isCorrect = q.answer === i;
+                let cls = 'w-full p-5 rounded-xl flex items-center gap-4 text-left border-2 ';
+                if (reviewMode || timeUp) {
+                    cls += isCorrect ? 'border-green-500 bg-green-50' : selected && !isCorrect ? 'border-red-500 bg-red-50' : 'border-gray-200 bg-gray-50 opacity-60';
+                } else if (answered) {
+                    cls += isCorrect ? 'border-green-500 bg-green-50 cursor-not-allowed' : selected ? 'border-red-500 bg-red-50 cursor-not-allowed' : 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed';
+                } else {
+                    cls += 'border-gray-200 bg-gray-50 hover:border-purple-500 hover:bg-purple-50 cursor-pointer';
+                }
+                const labelCls = (reviewMode || timeUp) && isCorrect ? 'bg-green-600' : (reviewMode || timeUp) && selected && !isCorrect ? 'bg-red-600' : 'bg-purple-600';
+
+                optionsHTML += `<button ${!reviewMode && !timeUp && !answered ? `onclick="selectAnswer(${idx},${i})"` : ''} class="${cls}">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white">${String.fromCharCode(65+i)}</div>
+                    <span class="flex-1">${opt}</span>
+                </button>`;
+            });
+
+            let expl = '';
+            if (answered || reviewMode || timeUp) {
+                expl = `<div class="mt-4 p-4 rounded-lg border-l-4 ${correct ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}">
+                    <p class="font-bold">${correct ? 'Correct' : 'Incorrect'} → ${String.fromCharCode(65+q.answer)}) ${q.options[q.answer]}</p>
+                    <p class="text-sm mt-1"><strong>Explanation:</strong> ${q.explanation}</p>
+                </div>`;
+            }
+
+            el.innerHTML = `
+                <div class="flex items-start gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-full ${correct ? 'bg-green-500' : answered ? 'bg-red-500' : 'bg-gradient-to-br from-purple-600 to-indigo-700'} text-white flex items-center justify-center font-bold text-lg">
+                        ${idx+1}
+                    </div>
+                    <h3 class="text-lg font-semibold flex-1">${q.q}</h3>
+                </div>
+                <div class="space-y-3">${optionsHTML}</div>
+                ${expl}
+            `;
+        }
+
+        function renderAllQuestions() {
+            const cont = document.getElementById('questionsContainer');
+            if (!cont) return;
+            cont.innerHTML = '';
+            currentQuestions.forEach((_, i) => {
+                const div = document.createElement('div');
+                div.id = `question-${i}`;
+                div.className = 'bg-white rounded-2xl shadow-xl p-6';
+                cont.appendChild(div);
+                renderQuestion(i);
+            });
+        }
 
         function showResults() {
             clearInterval(timerInterval);
@@ -51,17 +198,22 @@
             document.getElementById('scaledScore').textContent = scaledScore;
             document.getElementById('finalCorrect').textContent = stats.correct;
             document.getElementById('finalWrong').textContent = currentQuestions.length - stats.correct;
-            const passEl = document.getElementById('passStatus');
-            passEl.textContent = scaledScore >= 720 ? 'PASSED' : 'FAILED';
-            passEl.className = scaledScore >= 720 ? 'text-4xl font-bold text-green-600' : 'text-4xl font-bold text-red-600';
+            const pass = document.getElementById('passStatus');
+            pass.textContent = scaledScore >= 720 ? 'PASSED' : 'FAILED';
+            pass.className = scaledScore >= 720 ? 'text-4xl font-bold text-green-600' : 'text-4xl font-bold text-red-600';
 
             document.getElementById('resultModal').classList.remove('hidden');
             document.getElementById('resultModal').classList.add('flex');
         }
 
+        function backToHome() {
+            clearInterval(timerInterval);
+            clearProgress();
+            document.getElementById('app').innerHTML = getHomeHTML();
+        }
+
         function renderExamScreen() {
             document.getElementById('app').innerHTML = `
-                <!-- Header & Stats (unchanged) -->
                 <div class="bg-white rounded-2xl shadow-2xl p-6 mb-6">
                     <div class="flex justify-between items-center mb-4">
                         <h1 class="text-3xl font-bold text-purple-700">${selectedCert}</h1>
@@ -89,7 +241,7 @@
                     </button>
                 </div>
 
-                <!-- COMPACT & BEAUTIFUL RESULT CARD -->
+                <!-- COMPACT RESULT MODAL -->
                 <div id="resultModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
                     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md animate-slide-up">
                         <div class="text-center py-8 px-6">
@@ -99,7 +251,6 @@
                             <div id="passStatus" class="text-4xl font-bold mb-3">PENDING</div>
                             <p class="text-gray-600 text-sm">Passing: 720/1000</p>
                         </div>
-
                         <div class="grid grid-cols-2 gap-4 px-6 pb-6">
                             <div class="bg-green-50 rounded-2xl p-5 text-center">
                                 <div class="text-4xl font-bold text-green-600" id="finalCorrect">0</div>
@@ -110,7 +261,6 @@
                                 <div class="text-sm text-gray-700 mt-1">Wrong/Unanswered</div>
                             </div>
                         </div>
-
                         <div class="px-6 pb-8 space-y-3">
                             <button onclick="retryExam()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-bold py-4 rounded-2xl hover:opacity-90 transition">
                                 Retry Exam
@@ -126,31 +276,30 @@
             updateStats();
         }
 
-        // getHomeHTML, onload, etc. — same as before
         function getHomeHTML() {
-            return `<div class="text-center py-16">
-                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6">AWS Practice Tests</h1>
-                <p class="text-xl md:text-2xl text-purple-100 mb-16">130-min timer • 720/1000 passing</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto px-4">
-                    ${Object.keys(certificationQuestions).map(c => `
-                        <div onclick="startExam('${c}')" class="cert-card bg-white/95 rounded-3xl shadow-2xl p-8 text-center hover:shadow-3xl">
-                            <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-3xl flex items-center justify-center">
-                                <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
+            return `
+                <div class="text-center py-16">
+                    <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">AWS Practice Tests</h1>
+                    <p class="text-xl md:text-2xl text-purple-100 mb-16">130-min timer • 720/1000 passing score</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto px-4">
+                        ${Object.keys(certificationQuestions).map(c => `
+                            <div onclick="startExam('${c}')" class="cert-card bg-white/95 rounded-3xl shadow-2xl p-8 text-center hover:shadow-3xl">
+                                <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-3xl flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">${c.split(' (')[0]}</h3>
+                                <p class="text-purple-600 font-bold text-lg mt-2">${c.match(/\((.*?)\)/)[0]}</p>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-800">${c.split(' (')[0]}</h3>
-                            <p class="text-purple-600 font-bold text-lg mt-2">${c.match(/\((.*?)\)/)[0]}</p>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>`;
+                        `).join('')}
+                    </div>
+                </div>`;
         }
 
         window.onload = () => {
-            if (!loadProgress()) document.getElementById('app').innerHTML = getHomeHTML();
+            if (!loadProgress()) {
+                document.getElementById('app').innerHTML = getHomeHTML();
+            }
         };
-
-        // Paste all your existing helper functions (renderQuestion, selectAnswer, etc.) here — they remain unchanged
-        // (I'm keeping this short, but they are exactly the same as in previous working version)
     </script>
 </body>
 </html>
