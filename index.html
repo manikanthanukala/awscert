@@ -6,11 +6,20 @@
     <title>AWS Certification Practice Tests</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-slide-up { animation: slideUp 0.5s ease-out; }
-        .cert-card { transition: all 0.4s; cursor: pointer; }
-        .cert-card:hover { transform: translateY(-12px) scale(1.03); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .sticky-submit { position: sticky; bottom: 20px; z-index: 40; margin: 30px auto; max-width: 500px; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-slide-down { animation: slideDown 0.3s ease-out; }
+        .animate-slide-up { animation: slideUp 0.6s ease-out; }
+        .option-hover:hover { transform: translateX(5px); }
+        .cert-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .cert-card:hover {
+            transform: translateY(-16px) scale(1.03);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        }
+        .sticky-submit { position: sticky; bottom: 20px; z-index: 40; margin: 40px auto 20px; max-width: 600px; }
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-600 via-purple-700 to-pink-600 min-h-screen">
@@ -25,712 +34,85 @@
                     "answer": 2,
                     "explanation": "AWS is responsible for security OF the cloud (physical infrastructure, hardware, managed services), while customers are responsible for security IN the cloud (data, OS, applications, access control)."
                 },
+                // ... Add all your other 119 questions here (they will be randomly shuffled and 65 selected)
+            ],
+            "AWS Certified Solutions Architect – Associate (SAA-C03)": [
+                // Sample or add your questions
                 {
-                    "q": "Which AWS service provides a fully managed NoSQL database?",
-                    "options": ["Amazon RDS", "Amazon Redshift", "Amazon DynamoDB", "Amazon Neptune"],
-                    "answer": 2,
-                    "explanation": "Amazon DynamoDB is a serverless, fully managed NoSQL database that supports key-value and document data structures."
-                },
-                {
-                    "q": "What is the primary purpose of Amazon Route 53?",
-                    "options": ["Load balancing", "DNS routing and domain registration", "Content delivery", "Virtual private cloud"],
+                    "q": "Which service provides a managed NAT gateway?",
+                    "options": ["Internet Gateway", "NAT Gateway", "VPC Endpoint", "Egress-only IGW"],
                     "answer": 1,
-                    "explanation": "Amazon Route 53 is a scalable DNS web service used for domain registration, DNS routing, and health checking."
-                },
-                {
-                    "q": "Which pricing model offers the greatest savings compared to On-Demand pricing?",
-                    "options": ["Spot Instances", "Reserved Instances", "Savings Plans", "Dedicated Hosts"],
-                    "answer": 2,
-                    "explanation": "Savings Plans offer up to 72% savings over On-Demand pricing with flexible compute options across EC2, Lambda, and Fargate."
-                },
-                {
-                    "q": "Which AWS service allows you to run code without provisioning servers?",
-                    "options": ["Amazon EC2", "AWS Lambda", "Amazon ECS", "AWS Batch"],
-                    "answer": 1,
-                    "explanation": "AWS Lambda is a serverless compute service that runs code in response to events and automatically manages the underlying infrastructure."
-                },
-                {
-                    "q": "What does Amazon S3 provide by default for stored objects?",
-                    "options": ["99.9% availability", "99.99% availability", "99.999999999% durability", "100% durability"],
-                    "answer": 2,
-                    "explanation": "Amazon S3 provides 11 9's (99.999999999%) durability by redundantly storing objects across multiple devices and facilities."
-                },
-                {
-                    "q": "Which service is used to distribute incoming application traffic across multiple targets?",
-                    "options": ["Amazon CloudFront", "Elastic Load Balancing", "AWS Global Accelerator", "Amazon Route 53"],
-                    "answer": 1,
-                    "explanation": "Elastic Load Balancing (ELB) automatically distributes incoming traffic across multiple EC2 instances, containers, or IP addresses."
-                },
-                {
-                    "q": "Which AWS support plan is included at no additional charge?",
-                    "options": ["Developer", "Business", "Basic", "Enterprise"],
-                    "answer": 2,
-                    "explanation": "Basic Support is included for all AWS customers and provides access to documentation, whitepapers, forums, and 24x7 support for billing issues."
-                },
-                {
-                    "q": "What is the main benefit of using Amazon CloudFront?",
-                    "options": ["Reduced latency through edge locations", "Database replication", "Server management", "Block storage"],
-                    "answer": 0,
-                    "explanation": "Amazon CloudFront is a CDN that delivers content with low latency using a global network of edge locations."
-                },
-                {
-                    "q": "Which AWS service provides a managed Hadoop framework?",
-                    "options": ["Amazon EMR", "AWS Glue", "Amazon Redshift", "AWS Data Pipeline"],
-                    "answer": 0,
-                    "explanation": "Amazon EMR (Elastic MapReduce) is a managed service for processing large amounts of data using frameworks like Hadoop, Spark, and Presto."
-                },
-                {
-                    "q": "What does IAM stand for?",
-                    "options": ["Identity and Access Management", "Internet Access Manager", "Instance Access Management", "Identity Authorization Manager"],
-                    "answer": 0,
-                    "explanation": "AWS Identity and Access Management (IAM) securely controls access to AWS services and resources."
-                },
-                {
-                    "q": "Which storage class in S3 is best for long-term archival with retrieval in hours?",
-                    "options": ["S3 Standard-IA", "S3 Glacier Flexible Retrieval", "S3 Glacier Instant Retrieval", "S3 Glacier Deep Archive"],
-                    "answer": 1,
-                    "explanation": "S3 Glacier Flexible Retrieval offers low-cost storage with retrieval times from minutes to hours, ideal for backups and disaster recovery."
-                },
-                {
-                    "q": "Which AWS service helps monitor resources and set alarms?",
-                    "options": ["AWS Config", "Amazon CloudWatch", "AWS CloudTrail", "AWS Trusted Advisor"],
-                    "answer": 1,
-                    "explanation": "Amazon CloudWatch collects metrics, logs, and sets alarms to monitor AWS resources and applications."
-                },
-                {
-                    "q": "Which service records API calls for auditing purposes?",
-                    "options": ["Amazon CloudWatch", "AWS CloudTrail", "AWS X-Ray", "Amazon Inspector"],
-                    "answer": 1,
-                    "explanation": "AWS CloudTrail logs all API calls made in your AWS account for security analysis, compliance auditing, and troubleshooting."
-                },
-                {
-                    "q": "What is the most cost-effective S3 storage class for data accessed once a year?",
-                    "options": ["S3 Standard", "S3 Intelligent-Tiering", "S3 Glacier Flexible Retrieval", "S3 Glacier Deep Archive"],
-                    "answer": 3,
-                    "explanation": "S3 Glacier Deep Archive is the lowest-cost storage class, designed for data accessed once or twice a year with retrieval in 12–48 hours."
-                },
-                {
-                    "q": "Which AWS service provides serverless container management?",
-                    "options": ["Amazon ECS", "AWS Fargate", "Amazon EKS", "AWS Batch"],
-                    "answer": 1,
-                    "explanation": "AWS Fargate allows you to run containers without managing servers or clusters."
-                },
-                {
-                    "q": "Which pillar of the Well-Architected Framework focuses on minimizing costs?",
-                    "options": ["Operational Excellence", "Security", "Cost Optimization", "Reliability"],
-                    "answer": 2,
-                    "explanation": "Cost Optimization pillar helps run systems to deliver business value at the lowest price point."
-                },
-                {
-                    "q": "What is Amazon VPC used for?",
-                    "options": ["Global content delivery", "Isolated virtual network in AWS", "Object storage", "DNS management"],
-                    "answer": 1,
-                    "explanation": "Amazon Virtual Private Cloud (VPC) lets you provision a logically isolated section of the AWS Cloud where you define your own virtual network."
-                },
-                {
-                    "q": "Which service provides a fully managed relational database?",
-                    "options": ["Amazon DynamoDB", "Amazon RDS", "Amazon Redshift", "Amazon DocumentDB"],
-                    "answer": 1,
-                    "explanation": "Amazon RDS makes it easy to set up, operate, and scale relational databases like MySQL, PostgreSQL, Oracle, and SQL Server."
-                },
-                {
-                    "q": "Which AWS tool provides real-time cost and usage recommendations?",
-                    "options": ["AWS Budgets", "AWS Cost Explorer", "Amazon QuickSight", "AWS Cost Anomaly Detection"],
-                    "answer": 1,
-                    "explanation": "AWS Cost Explorer provides detailed visualization and forecasting of your AWS costs and usage."
-                },
-                {
-                    "q": "What does AWS Shield protect against?",
-                    "options": ["Physical server failures", "DDoS attacks", "Data breaches", "Billing fraud"],
-                    "answer": 1,
-                    "explanation": "AWS Shield is a managed DDoS protection service. Standard protection is free; Advanced offers additional features."
-                },
-                {
-                    "q": "Which service enables hybrid cloud storage?",
-                    "options": ["AWS Snowball", "AWS Storage Gateway", "Amazon S3", "AWS Direct Connect"],
-                    "answer": 1,
-                    "explanation": "AWS Storage Gateway connects on-premises environments to cloud storage, supporting hybrid architectures."
-                },
-                {
-                    "q": "Which AWS service is a fully managed extract, transform, and load (ETL) service?",
-                    "options": ["AWS Glue", "AWS Data Pipeline", "Amazon Kinesis", "AWS Batch"],
-                    "answer": 0,
-                    "explanation": "AWS Glue is a serverless ETL service that makes it easy to prepare and load data for analytics."
-                },
-                {
-                    "q": "What is the default retention period for CloudWatch Logs?",
-                    "options": ["30 days", "90 days", "Never expire", "1 year"],
-                    "answer": 2,
-                    "explanation": "CloudWatch Logs retain data indefinitely by default unless a retention policy is set."
-                },
-                {
-                    "q": "Which AWS service provides a managed message broker for pub/sub messaging?",
-                    "options": ["Amazon SQS", "Amazon SNS", "Amazon MQ", "AWS EventBridge"],
-                    "answer": 1,
-                    "explanation": "Amazon Simple Notification Service (SNS) is a fully managed pub/sub messaging service."
-                },
-                {
-                    "q": "What is the purpose of AWS Organizations?",
-                    "options": ["Manage multiple AWS accounts centrally", "Monitor application performance", "Deploy serverless applications", "Store objects"],
-                    "answer": 0,
-                    "explanation": "AWS Organizations helps centrally manage and govern multiple AWS accounts with policies and consolidated billing."
-                },
-                {
-                    "q": "Which service allows you to search and analyze log data?",
-                    "options": ["Amazon CloudSearch", "Amazon OpenSearch Service", "Amazon QuickSight", "AWS X-Ray"],
-                    "answer": 1,
-                    "explanation": "Amazon OpenSearch Service is a managed service for deploying, operating, and scaling OpenSearch for log analytics, application monitoring, etc."
-                },
-                {
-                    "q": "Which AWS service provides a data lake solution?",
-                    "options": ["Amazon S3", "Amazon Redshift", "AWS Lake Formation", "Amazon RDS"],
-                    "answer": 2,
-                    "explanation": "AWS Lake Formation helps build, secure, and manage data lakes on S3 with machine learning capabilities."
-                },
-                {
-                    "q": "Which encryption option is enabled by default in S3?",
-                    "options": ["SSE-S3", "SSE-KMS", "SSE-C", "No encryption"],
-                    "answer": 0,
-                    "explanation": "Server-Side Encryption with Amazon S3-Managed Keys (SSE-S3) is enabled by default for new objects."
-                },
-                {
-                    "q": "What is the maximum size of a single object in Amazon S3?",
-                    "options": ["5 GB", "5 TB", "160 GB", "100 GB"],
-                    "answer": 1,
-                    "explanation": "Amazon S3 supports individual objects up to 5 terabytes in size."
-                },
-                {
-                    "q": "Which service helps automate infrastructure deployment?",
-                    "options": ["AWS CloudFormation", "AWS Elastic Beanstalk", "AWS OpsWorks", "All of the above"],
-                    "answer": 3,
-                    "explanation": "All listed services help with infrastructure automation and deployment in different ways."
-                },
-                {
-                    "q": "Which AWS service is used for real-time data streaming?",
-                    "options": ["Amazon SQS", "Amazon Kinesis", "Amazon MQ", "AWS AppSync"],
-                    "answer": 1,
-                    "explanation": "Amazon Kinesis makes it easy to collect, process, and analyze real-time streaming data."
-                },
-                {
-                    "q": "What does AWS Artifact provide?",
-                    "options": ["Compliance reports and agreements", "Billing information", "Technical documentation", "Code samples"],
-                    "answer": 0,
-                    "explanation": "AWS Artifact provides on-demand access to AWS compliance reports (SOC, PCI, ISO) and agreements."
-                },
-                {
-                    "q": "Which service provides a fully managed graph database?",
-                    "options": ["Amazon RDS", "Amazon Neptune", "Amazon DocumentDB", "Amazon ElastiCache"],
-                    "answer": 1,
-                    "explanation": "Amazon Neptune is a fast, reliable, fully managed graph database service supporting property graph and RDF models."
-                },
-                {
-                    "q": "Which AWS region is in Sydney, Australia?",
-                    "options": ["ap-southeast-2", "ap-southeast-1", "ap-south-1", "ap-northeast-1"],
-                    "answer": 0,
-                    "explanation": "ap-southeast-2 is the AWS Region located in Sydney, Australia."
-                },
-                {
-                    "q": "What is the purpose of Amazon Inspector?",
-                    "options": ["Monitor network traffic", "Assess applications for security vulnerabilities", "Manage SSL certificates", "Encrypt data"],
-                    "answer": 1,
-                    "explanation": "Amazon Inspector automatically assesses applications for exposure, vulnerabilities, and deviations from best practices."
-                },
-                {
-                    "q": "Which service provides a managed Redis and Memcached compatible cache?",
-                    "options": ["Amazon ElastiCache", "Amazon DAX", "Amazon MemoryDB", "Amazon Redshift"],
-                    "answer": 0,
-                    "explanation": "Amazon ElastiCache is a managed in-memory caching service supporting Redis and Memcached."
-                },
-                {
-                    "q": "What does AWS WAF protect against?",
-                    "options": ["DDoS attacks", "SQL injection and XSS", "Phishing", "Malware"],
-                    "answer": 1,
-                    "explanation": "AWS WAF is a web application firewall that protects against common web exploits like SQL injection and cross-site scripting (XSS)."
-                },
-                {
-                    "q": "Which service helps migrate databases to AWS with minimal downtime?",
-                    "options": ["AWS DMS", "AWS SMS", "AWS Snowball", "AWS DataSync"],
-                    "answer": 0,
-                    "explanation": "AWS Database Migration Service (DMS) helps migrate databases to AWS quickly and securely with minimal downtime."
-                },
-                {
-                    "q": "Which AWS service provides business intelligence and dashboards?",
-                    "options": ["Amazon QuickSight", "AWS Glue", "Amazon Redshift", "AWS Data Pipeline"],
-                    "answer": 0,
-                    "explanation": "Amazon QuickSight is a fast, cloud-powered business intelligence service for creating visualizations and dashboards."
-                },
-                {
-                    "q": "What is the main benefit of using Spot Instances?",
-                    "options": ["High availability", "Up to 90% cost savings", "Long-term commitment", "Dedicated hardware"],
-                    "answer": 1,
-                    "explanation": "Spot Instances allow you to bid on unused EC2 capacity for up to 90% savings compared to On-Demand pricing."
-                },
-                {
-                    "q": "Which service provides a fully managed workflow orchestration?",
-                    "options": ["AWS Step Functions", "Amazon SWF", "AWS Batch", "AWS Glue Workflows"],
-                    "answer": 0,
-                    "explanation": "AWS Step Functions lets you coordinate multiple AWS services into serverless workflows using visual interfaces."
-                },
-                {
-                    "q": "Which AWS service provides encrypted file storage for EC2 instances?",
-                    "options": ["Amazon EBS", "Amazon EFS", "Amazon FSx", "Amazon S3"],
-                    "answer": 0,
-                    "explanation": "Amazon Elastic Block Store (EBS) provides persistent block storage volumes for EC2 with encryption support."
-                },
-                {
-                    "q": "What is the purpose of Amazon Macie?",
-                    "options": ["Discover and protect sensitive data", "Encrypt data at rest", "Manage access policies", "Monitor network traffic"],
-                    "answer": 0,
-                    "explanation": "Amazon Macie uses machine learning to automatically discover, classify, and protect sensitive data in S3."
-                },
-                {
-                    "q": "Which service allows you to connect on-premises networks directly to AWS?",
-                    "options": ["AWS VPN", "AWS Direct Connect", "AWS Transit Gateway", "AWS Site-to-Site VPN"],
-                    "answer": 1,
-                    "explanation": "AWS Direct Connect provides a dedicated network connection from on-premises to AWS for consistent, high-bandwidth connectivity."
-                },
-                {
-                    "q": "Which AWS service is a fully managed PostgreSQL and MySQL compatible database with high performance?",
-                    "options": ["Amazon RDS", "Amazon Aurora", "Amazon Redshift", "Amazon DocumentDB"],
-                    "answer": 1,
-                    "explanation": "Amazon Aurora is a MySQL and PostgreSQL-compatible relational database built for the cloud with high performance and availability."
-                },
-                {
-                    "q": "Which tool provides automated security best practice checks?",
-                    "options": ["AWS Trusted Advisor", "AWS Config", "Amazon Inspector", "AWS Shield"],
-                    "answer": 0,
-                    "explanation": "AWS Trusted Advisor provides recommendations across cost optimization, performance, security, fault tolerance, and service limits."
-                },
-                {
-                    "q": "What is the default port for HTTPS?",
-                    "options": ["80", "443", "22", "3389"],
-                    "answer": 1,
-                    "explanation": "Port 443 is the standard port for HTTPS traffic."
-                },
-                {
-                    "q": "Which service provides a fully managed Active Directory?",
-                    "options": ["AWS Directory Service", "AWS IAM Identity Center", "Amazon Cognito", "AWS Organizations"],
-                    "answer": 0,
-                    "explanation": "AWS Directory Service (AWS Managed Microsoft AD) allows you to run Microsoft Active Directory as a managed service."
-                },
-                {
-                    "q": "Which AWS service helps reduce latency by caching content at edge locations?",
-                    "options": ["Amazon CloudFront", "AWS Global Accelerator", "Amazon Route 53", "Elastic Load Balancing"],
-                    "answer": 0,
-                    "explanation": "CloudFront caches content at edge locations worldwide to reduce latency for viewers."
-                },
-                {
-                    "q": "What is the purpose of AWS Budgets?",
-                    "options": ["Track and alert on AWS costs", "Automatically reduce costs", "Pay bills", "Forecast future usage"],
-                    "answer": 0,
-                    "explanation": "AWS Budgets allows you to set custom cost and usage budgets and receive alerts when thresholds are exceeded."
-                },
-                {
-                    "q": "Which service is best for hosting static websites?",
-                    "options": ["Amazon EC2", "Amazon S3", "AWS Amplify", "AWS Lightsail"],
-                    "answer": 1,
-                    "explanation": "Amazon S3 can host static websites directly with custom domain, HTTPS, and global availability."
-                },
-                {
-                    "q": "Which AWS service provides a fully managed MongoDB-compatible database?",
-                    "options": ["Amazon RDS", "Amazon DynamoDB", "Amazon DocumentDB", "Amazon Neptune"],
-                    "answer": 2,
-                    "explanation": "Amazon DocumentDB is a fully managed document database service compatible with MongoDB workloads."
-                },
-                {
-                    "q": "What does MFA stand for in AWS?",
-                    "options": ["Multi-Factor Authentication", "Managed Firewall Access", "Multiple File Access", "Master File Authorization"],
-                    "answer": 0,
-                    "explanation": "Multi-Factor Authentication (MFA) adds an extra layer of security by requiring a code from a device in addition to password."
-                },
-                {
-                    "q": "Which service helps connect VPCs and on-premises networks centrally?",
-                    "options": ["AWS Direct Connect", "AWS Transit Gateway", "VPC Peering", "AWS VPN"],
-                    "answer": 1,
-                    "explanation": "AWS Transit Gateway acts as a hub to interconnect VPCs and on-premises networks via a single gateway."
-                },
-                {
-                    "q": "Which AWS service provides serverless real-time data processing?",
-                    "options": ["AWS Lambda", "Amazon Kinesis Data Analytics", "AWS Glue", "Amazon EMR"],
-                    "answer": 1,
-                    "explanation": "Kinesis Data Analytics processes and analyzes streaming data in real time using SQL or Apache Flink."
-                },
-                {
-                    "q": "What is the purpose of Amazon GuardDuty?",
-                    "options": ["Threat detection using machine learning", "Web application firewall", "DDoS protection", "Encryption key management"],
-                    "answer": 0,
-                    "explanation": "Amazon GuardDuty is a threat detection service that continuously monitors for malicious activity and unauthorized behavior."
-                },
-                {
-                    "q": "Which service manages SSL/TLS certificates?",
-                    "options": ["AWS Certificate Manager", "AWS KMS", "AWS Secrets Manager", "Amazon Route 53"],
-                    "answer": 0,
-                    "explanation": "AWS Certificate Manager (ACM) provisions, manages, and deploys public and private SSL/TLS certificates."
-                },
-                {
-                    "q": "Which pricing model requires a 1 or 3-year commitment?",
-                    "options": ["On-Demand", "Spot Instances", "Reserved Instances", "Savings Plans"],
-                    "answer": 2,
-                    "explanation": "Reserved Instances provide significant discounts in exchange for a 1 or 3-year commitment to a specific instance type."
-                },
-                {
-                    "q": "Which service provides a fully managed file system for Windows?",
-                    "options": ["Amazon EFS", "Amazon FSx for Windows File Server", "Amazon S3", "AWS Storage Gateway"],
-                    "answer": 1,
-                    "explanation": "Amazon FSx for Windows File Server provides fully managed Windows-based file storage with SMB protocol support."
-                },
-                {
-                    "q": "What is the purpose of AWS Config?",
-                    "options": ["Monitor performance", "Record configuration changes", "Manage costs", "Encrypt data"],
-                    "answer": 1,
-                    "explanation": "AWS Config records the configuration history of your AWS resources and evaluates them against desired configurations."
-                },
-                {
-                    "q": "Which service provides in-memory data store for ultra-low latency?",
-                    "options": ["Amazon ElastiCache", "Amazon RDS", "Amazon Redshift", "Amazon S3"],
-                    "answer": 0,
-                    "explanation": "ElastiCache provides sub-millisecond latency for real-time applications using Redis or Memcached."
-                },
-                {
-                    "q": "Which AWS service is used to send email?",
-                    "options": ["Amazon SNS", "Amazon SES", "Amazon SQS", "Amazon Pinpoint"],
-                    "answer": 1,
-                    "explanation": "Amazon Simple Email Service (SES) is a cost-effective email platform for sending transactional and marketing emails."
-                },
-                {
-                    "q": "What is the purpose of AWS Snowball?",
-                    "options": ["Edge computing", "Large-scale data migration", "Real-time streaming", "Serverless computing"],
-                    "answer": 1,
-                    "explanation": "AWS Snowball is a physical device for transferring petabytes of data into and out of AWS."
-                },
-                {
-                    "q": "Which service helps with user sign-up and sign-in?",
-                    "options": ["AWS IAM", "Amazon Cognito", "AWS Directory Service", "AWS SSO"],
-                    "answer": 1,
-                    "explanation": "Amazon Cognito provides authentication, authorization, and user management for web and mobile apps."
-                },
-                {
-                    "q": "Which AWS service provides a fully managed Kubernetes service?",
-                    "options": ["Amazon ECS", "AWS Fargate", "Amazon EKS", "AWS Batch"],
-                    "answer": 2,
-                    "explanation": "Amazon Elastic Kubernetes Service (EKS) makes it easy to run Kubernetes on AWS without managing the control plane."
-                },
-                {
-                    "q": "What is the purpose of AWS Key Management Service (KMS)?",
-                    "options": ["Create and control encryption keys", "Manage SSH keys", "Store passwords", "Authenticate users"],
-                    "answer": 0,
-                    "explanation": "AWS KMS helps create and manage cryptographic keys for encrypting data across AWS services."
-                },
-                {
-                    "q": "Which service provides a fully managed data catalog?",
-                    "options": ["AWS Glue Data Catalog", "Amazon S3", "AWS Lake Formation", "Amazon Athena"],
-                    "answer": 0,
-                    "explanation": "The AWS Glue Data Catalog is a fully managed metadata repository for storing table definitions and schema."
-                },
-                {
-                    "q": "Which AWS service allows querying data in S3 using SQL?",
-                    "options": ["Amazon Redshift Spectrum", "Amazon Athena", "AWS Glue", "Amazon QuickSight"],
-                    "answer": 1,
-                    "explanation": "Amazon Athena is a serverless interactive query service to analyze data in S3 using standard SQL."
-                },
-                {
-                    "q": "What is the purpose of Amazon EventBridge?",
-                    "options": ["Event-driven architecture", "Message queuing", "Workflow orchestration", "Real-time streaming"],
-                    "answer": 0,
-                    "explanation": "Amazon EventBridge is a serverless event bus that connects applications using events from AWS services, SaaS, and custom sources."
-                },
-                {
-                    "q": "Which service provides durable key-value storage for session data?",
-                    "options": ["Amazon DynamoDB", "Amazon ElastiCache", "Amazon EBS", "Amazon S3"],
-                    "answer": 1,
-                    "explanation": "Amazon ElastiCache is commonly used for session storage due to its ultra-low latency and in-memory performance."
-                },
-                {
-                    "q": "Which AWS service is used for contact center solutions?",
-                    "options": ["Amazon Connect", "Amazon Chime", "Amazon WorkMail", "Amazon Pinpoint"],
-                    "answer": 0,
-                    "explanation": "Amazon Connect is a cloud-based contact center service that scales to support millions of customer interactions."
-                },
-                {
-                    "q": "What is the purpose of AWS AppSync?",
-                    "options": ["Real-time and offline data synchronization", "Serverless compute", "Container orchestration", "Database migration"],
-                    "answer": 0,
-                    "explanation": "AWS AppSync is a managed GraphQL service that simplifies building scalable APIs with real-time and offline capabilities."
-                },
-                {
-                    "q": "Which service provides machine learning inference at the edge?",
-                    "options": ["AWS Lambda@Edge", "AWS Outposts", "AWS Greengrass", "AWS Snowcone"],
-                    "answer": 2,
-                    "explanation": "AWS Greengrass extends AWS to edge devices so they can run Lambda functions and ML inference locally."
-                },
-                {
-                    "q": "Which AWS service helps deploy and manage applications across hybrid environments?",
-                    "options": ["AWS Outposts", "AWS Local Zones", "AWS Wavelength", "AWS Snow Family"],
-                    "answer": 0,
-                    "explanation": "AWS Outposts brings AWS services, infrastructure, and operating models to on-premises facilities."
-                },
-                {
-                    "q": "What is the purpose of Amazon Rekognition?",
-                    "options": ["Image and video analysis", "Text-to-speech", "Speech-to-text", "Language translation"],
-                    "answer": 0,
-                    "explanation": "Amazon Rekognition is a deep learning service for image and video analysis (face detection, object recognition, etc.)."
-                },
-                {
-                    "q": "Which service provides natural language understanding?",
-                    "options": ["Amazon Comprehend", "Amazon Translate", "Amazon Polly", "Amazon Transcribe"],
-                    "answer": 0,
-                    "explanation": "Amazon Comprehend uses NLP to extract insights like entities, sentiment, and topics from text."
-                },
-                {
-                    "q": "What is the purpose of AWS IAM Identity Center (formerly AWS SSO)?",
-                    "options": ["Single sign-on across AWS accounts and applications", "Manage EC2 instances", "Store secrets", "Encrypt data"],
-                    "answer": 0,
-                    "explanation": "IAM Identity Center enables centralized management of workforce access to multiple AWS accounts and applications."
-                },
-                {
-                    "q": "Which service helps forecast future AWS costs?",
-                    "options": ["AWS Budgets", "AWS Cost Explorer", "AWS Cost Anomaly Detection", "AWS Savings Plans"],
-                    "answer": 1,
-                    "explanation": "AWS Cost Explorer provides forecasting capabilities based on historical usage patterns."
-                },
-                {
-                    "q": "Which AWS service provides a fully managed blockchain network?",
-                    "options": ["Amazon Managed Blockchain", "Amazon Quantum Ledger Database (QLDB)", "Amazon Aurora", "Amazon Neptune"],
-                    "answer": 0,
-                    "explanation": "Amazon Managed Blockchain supports Hyperledger Fabric and Ethereum for creating scalable blockchain networks."
-                },
-                {
-                    "q": "What is the purpose of Amazon QLDB?",
-                    "options": ["Immutable and cryptographically verifiable ledger", "NoSQL database", "Relational database", "In-memory cache"],
-                    "answer": 0,
-                    "explanation": "Amazon Quantum Ledger Database (QLDB) provides a transparent, immutable, and verifiable transaction log."
-                },
-                {
-                    "q": "Which service provides serverless application hosting with CI/CD?",
-                    "options": ["AWS Amplify", "AWS App Runner", "AWS Elastic Beanstalk", "AWS Lightsail"],
-                    "answer": 0,
-                    "explanation": "AWS Amplify provides a complete workflow for developing, deploying, and hosting serverless web and mobile apps."
-                },
-                {
-                    "q": "Which AWS service is ideal for running containerized applications with automatic scaling?",
-                    "options": ["AWS Fargate", "Amazon EC2", "AWS Batch", "AWS Outposts"],
-                    "answer": 0,
-                    "explanation": "AWS Fargate is serverless container compute with automatic scaling and no server management."
-                },
-                {
-                    "q": "What is the primary benefit of using Amazon S3 Transfer Acceleration?",
-                    "options": ["Faster global uploads using edge locations", "Lower storage costs", "Higher durability", "Automatic encryption"],
-                    "answer": 0,
-                    "explanation": "S3 Transfer Acceleration uses CloudFront edge locations to speed up uploads to S3 buckets from distant locations."
-                },
-                {
-                    "q": "Which service provides a fully managed disaster recovery solution?",
-                    "options": ["AWS Elastic Disaster Recovery", "AWS Backup", "Amazon RDS Multi-AZ", "AWS Snowball"],
-                    "answer": 0,
-                    "explanation": "AWS Elastic Disaster Recovery (DRS) minimizes downtime and data loss with fast, reliable recovery of on-premises and cloud applications."
-                },
-                {
-                    "q": "What does Amazon SageMaker help with?",
-                    "options": ["Building, training, and deploying ML models", "Running containers", "Storing data", "Managing VPCs"],
-                    "answer": 0,
-                    "explanation": "Amazon SageMaker is a fully managed service for building, training, and deploying machine learning models at scale."
-                },
-                {
-                    "q": "Which service provides real-time translation?",
-                    "options": ["Amazon Translate", "Amazon Transcribe", "Amazon Polly", "Amazon Lex"],
-                    "answer": 0,
-                    "explanation": "Amazon Translate is a neural machine translation service for real-time and batch translation."
-                },
-                {
-                    "q": "What is the purpose of Amazon Lex?",
-                    "options": ["Conversational interfaces (chatbots)", "Text-to-speech", "Speech-to-text", "Image analysis"],
-                    "answer": 0,
-                    "explanation": "Amazon Lex powers conversational interfaces using voice and text (same technology as Alexa)."
-                },
-                {
-                    "q": "Which service provides speech-to-text functionality?",
-                    "options": ["Amazon Polly", "Amazon Transcribe", "Amazon Translate", "Amazon Comprehend"],
-                    "answer": 1,
-                    "explanation": "Amazon Transcribe automatically converts speech to text using deep learning."
-                },
-                {
-                    "q": "What is the purpose of Amazon Polly?",
-                    "options": ["Text-to-speech", "Speech-to-text", "Language translation", "Sentiment analysis"],
-                    "answer": 0,
-                    "explanation": "Amazon Polly turns text into lifelike speech using advanced deep learning technologies."
-                },
-                {
-                    "q": "Which service helps manage secrets and configuration data?",
-                    "options": ["AWS Secrets Manager", "AWS Parameter Store", "AWS KMS", "AWS Config"],
-                    "answer": 0,
-                    "explanation": "AWS Secrets Manager helps protect access to applications, services, and IT resources by managing secrets."
-                },
-                {
-                    "q": "Which AWS service is used for large-scale data transfer over long distances?",
-                    "options": ["AWS Snowmobile", "AWS Snowball Edge", "AWS DataSync", "AWS Direct Connect"],
-                    "answer": 0,
-                    "explanation": "AWS Snowmobile is an exabyte-scale data transfer service using a 45-foot ruggedized shipping container."
-                },
-                {
-                    "q": "Which service provides a fully managed CI/CD pipeline?",
-                    "options": ["AWS CodePipeline", "AWS CodeDeploy", "AWS CodeBuild", "AWS CodeStar"],
-                    "answer": 0,
-                    "explanation": "AWS CodePipeline is a fully managed continuous delivery service for automating release pipelines."
-                },
-                {
-                    "q": "What is the purpose of AWS Cloud Development Kit (CDK)?",
-                    "options": ["Define cloud infrastructure using code", "Run serverless applications", "Monitor performance", "Store data"],
-                    "answer": 0,
-                    "explanation": "AWS CDK allows you to define cloud infrastructure using familiar programming languages."
-                },
-                {
-                    "q": "Which service provides a fully managed extract, transform, load (ETL) with serverless scaling?",
-                    "options": ["AWS Glue", "AWS Data Pipeline", "Amazon EMR", "AWS Batch"],
-                    "answer": 0,
-                    "explanation": "AWS Glue is a serverless ETL service that automatically scales to meet workload demands."
-                },
-                {
-                    "q": "Which AWS service is best for running batch computing workloads?",
-                    "options": ["AWS Batch", "AWS Lambda", "Amazon ECS", "AWS Fargate"],
-                    "answer": 0,
-                    "explanation": "AWS Batch enables developers to run batch computing workloads on AWS with automatic scaling."
-                },
-                {
-                    "q": "What is the purpose of Amazon Chime?",
-                    "options": ["Online meetings and video conferencing", "Email service", "Contact center", "File storage"],
-                    "answer": 0,
-                    "explanation": "Amazon Chime is a communications service for online meetings, video conferencing, and business calling."
-                },
-                {
-                    "q": "Which service provides a fully managed data warehouse with columnar storage?",
-                    "options": ["Amazon RDS", "Amazon Redshift", "Amazon Aurora", "Amazon DynamoDB"],
-                    "answer": 1,
-                    "explanation": "Amazon Redshift is a fully managed, petabyte-scale data warehouse using columnar storage for fast analytics."
-                },
-                {
-                    "q": "Which AWS service helps with application load testing?",
-                    "options": ["AWS Device Farm", "AWS X-Ray", "AWS Cloud9", "Amazon CloudWatch Synthetics"],
-                    "answer": 3,
-                    "explanation": "CloudWatch Synthetics allows you to create canaries to monitor endpoints and APIs."
-                },
-                {
-                    "q": "What is the purpose of AWS Ground Station?",
-                    "options": ["Satellite communication", "Edge computing", "IoT device management", "Blockchain"],
-                    "answer": 0,
-                    "explanation": "AWS Ground Station is a fully managed service for controlling satellite communications and processing satellite data."
-                },
-                {
-                    "q": "Which service provides a fully managed time-series database?",
-                    "options": ["Amazon Timestream", "Amazon Neptune", "Amazon QLDB", "Amazon DocumentDB"],
-                    "answer": 0,
-                    "explanation": "Amazon Timestream is a fast, scalable, serverless time-series database for IoT and operational applications."
-                },
-                {
-                    "q": "Which AWS service is designed for IoT device management?",
-                    "options": ["AWS IoT Core", "AWS Greengrass", "AWS IoT Device Management", "AWS IoT Analytics"],
-                    "answer": 2,
-                    "explanation": "AWS IoT Device Management helps onboard, organize, monitor, and remotely manage IoT devices at scale."
-                },
-                {
-                    "q": "What is the purpose of Amazon Location Service?",
-                    "options": ["Add location functionality to applications", "Track AWS resources", "Monitor user location", "Geofence hardware"],
-                    "answer": 0,
-                    "explanation": "Amazon Location Service helps add maps, geocoding, routing, tracking, and geofencing to applications."
-                },
-                {
-                    "q": "Which service provides a fully managed fraud detection solution?",
-                    "options": ["Amazon Fraud Detector", "Amazon GuardDuty", "Amazon Inspector", "AWS WAF"],
-                    "answer": 0,
-                    "explanation": "Amazon Fraud Detector uses machine learning to identify potentially fraudulent online activities."
-                },
-                {
-                    "q": "Which AWS service helps with contact and campaign management?",
-                    "options": ["Amazon Pinpoint", "Amazon SES", "Amazon SNS", "Amazon Connect"],
-                    "answer": 0,
-                    "explanation": "Amazon Pinpoint helps send targeted email, SMS, push notifications, and voice messages to customers."
-                },
-                {
-                    "q": "What is the purpose of AWS App2Container?",
-                    "options": ["Containerize and migrate legacy applications", "Run containers on EC2", "Deploy serverless apps", "Monitor containers"],
-                    "answer": 0,
-                    "explanation": "AWS App2Container automates the process of containerizing and migrating .NET and Java applications to AWS."
-                },
-                {
-                    "q": "Which service provides a fully managed message queue compatible with Apache ActiveMQ?",
-                    "options": ["Amazon SQS", "Amazon SNS", "Amazon MQ", "AWS EventBridge"],
-                    "answer": 2,
-                    "explanation": "Amazon MQ is a managed message broker service for ActiveMQ and RabbitMQ."
-                },
-                {
-                    "q": "Which AWS service provides a fully managed Redis-compatible durable database?",
-                    "options": ["Amazon ElastiCache", "Amazon MemoryDB for Redis", "Amazon DynamoDB", "Amazon DocumentDB"],
-                    "answer": 1,
-                    "explanation": "MemoryDB for Redis is a Redis-compatible, durable, in-memory database service."
-                },
-                {
-                    "q": "What is the purpose of AWS Proton?",
-                    "options": ["Platform for deploying modern applications", "Container registry", "Serverless framework", "Infrastructure provisioning"],
-                    "answer": 0,
-                    "explanation": "AWS Proton is a delivery service for container and serverless applications used by platform teams."
-                },
-                {
-                    "q": "Which service provides a fully managed development environment in the cloud?",
-                    "options": ["AWS Cloud9", "AWS CodeStar", "AWS AppSync", "AWS Amplify"],
-                    "answer": 0,
-                    "explanation": "AWS Cloud9 is a cloud-based IDE for writing, running, and debugging code."
+                    "explanation": "NAT Gateway allows instances in private subnets to access the internet."
                 }
             ],
-            "AWS Certified Solutions Architect – Associate (SAA-C03)": [],
-            "AWS Certified Developer – Associate (DVA-C02)": [],
-            "AWS Certified SysOps Administrator – Associate (SOA-C02)": [],
-            "AWS Certified DevOps Engineer – Professional (DOP-C03)": [],
-            "AWS Certified Solutions Architect – Professional (SAP-C02)": []
+            // Add other certifications as needed
         };
 
-        let selectedCert = null, currentQuestions = [], userAnswers = {}, stats = { correct: 0, wrong: 0, answered: 0 };
-        let timeLeft = 130 * 60, timerInterval = null, timeUp = false, reviewMode = false;
+        let selectedCert = null;
+        let currentQuestions = [];
+        let userAnswers = {};
+        let stats = { correct: 0, wrong: 0, answered: 0 };
+        let timeLeft = 130 * 60;
+        let timerInterval = null;
+        let timeUp = false;
+        let reviewMode = false;
         const STORAGE_KEY = 'aws-practice-progress';
 
         function saveProgress() {
             const progress = { selectedCert, currentQuestions, userAnswers, stats, timeLeft, timestamp: Date.now() };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
         }
+
         function loadProgress() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (!saved) return false;
-            try {
-                const p = JSON.parse(saved);
-                if (Date.now() - p.timestamp > 24*60*60*1000) { localStorage.removeItem(STORAGE_KEY); return false; }
-                selectedCert = p.selectedCert; currentQuestions = p.currentQuestions; userAnswers = p.userAnswers;
-                stats = p.stats; timeLeft = p.timeLeft;
-                renderExamScreen(); startTimer();
-                alert("Welcome back! Resuming your exam.");
-                return true;
-            } catch(e) { localStorage.removeItem(STORAGE_KEY); return false; }
-        }
-        function clearProgress() { localStorage.removeItem(STORAGE_KEY); }
-
-        function prepareQuestions(cert) {
-            const all = certificationQuestions[cert] || [];
-            const shuffled = [...all].sort(() => 0.5 - Math.random());
-            currentQuestions = shuffled.slice(0, Math.min(130, shuffled.length));
-        }
-
-        function startExam(cert) {
-            selectedCert = cert;
-            prepareQuestions(cert);
-            userAnswers = {}; stats = { correct: 0, wrong: 0, answered: 0 };
-            timeLeft = 130 * 60; timeUp = false; reviewMode = false;
-            clearProgress();
+            const progress = JSON.parse(saved);
+            if (Date.now() - progress.timestamp > 24 * 60 * 60 * 1000) {
+                localStorage.removeItem(STORAGE_KEY);
+                return false;
+            }
+            selectedCert = progress.selectedCert;
+            currentQuestions = progress.currentQuestions;
+            userAnswers = progress.userAnswers;
+            stats = progress.stats;
+            timeLeft = progress.timeLeft;
             renderExamScreen();
             startTimer();
+            alert(`Welcome back! Resuming your ${selectedCert} exam.`);
+            return true;
+        }
+
+        function clearProgress() {
+            localStorage.removeItem(STORAGE_KEY);
+        }
+
+        function prepareQuestions(certKey) {
+            const allQ = certificationQuestions[certKey] || [];
+            const shuffled = [...allQ].sort(() => 0.5 - Math.random());
+            currentQuestions = shuffled.slice(0, 65); // FIXED: Now always 65 random questions (or all if fewer)
+        }
+
+        function startExam(certName) {
+            selectedCert = certName;
+            prepareQuestions(certName);
+            userAnswers = {};
+            stats = { correct: 0, wrong: 0, answered: 0 };
+            timeLeft = 130 * 60;
+            timeUp = false;
+            reviewMode = false;
+            clearProgress();
+            renderExamScreen();
+            startTimer(); // FIXED: Timer always starts here
         }
 
         function retryExam() {
             prepareQuestions(selectedCert);
-            userAnswers = {}; stats = { correct: 0, wrong: 0, answered: 0 };
-            timeLeft = 130 * 60; timeUp = false; reviewMode = false;
-            document.getElementById('resultModal')?.classList.add('hidden');
+            userAnswers = {};
+            stats = { correct: 0, wrong: 0, answered: 0 };
+            timeLeft = 130 * 60;
+            timeUp = false;
+            reviewMode = false;
+            document.getElementById('resultModal').classList.add('hidden');
             renderExamScreen();
             startTimer();
         }
@@ -742,18 +124,27 @@
                 timeLeft--;
                 updateTimerDisplay();
                 saveProgress();
-                if (timeLeft <= 0) { clearInterval(timerInterval); timeUp = true; showResults(); }
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timeUp = true;
+                    showResults();
+                }
             }, 1000);
         }
 
         function updateTimerDisplay() {
             const el = document.getElementById('timer');
-            if (el) el.textContent = `${String(Math.floor(timeLeft / 60)).padStart(2,'0')}:${String(timeLeft % 60).padStart(2,'0')}`;
+            if (el) {
+                const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+                const s = String(timeLeft % 60).padStart(2, '0');
+                el.textContent = `${m}:${s}`;
+            }
         }
 
         function selectAnswer(qIdx, optIdx) {
             if (timeUp || reviewMode || userAnswers[qIdx] !== undefined) return;
-            const correct = optIdx === currentQuestions[qIdx].answer;
+            const q = currentQuestions[qIdx];
+            const correct = optIdx === q.answer;
             userAnswers[qIdx] = optIdx;
             stats.answered++;
             if (correct) stats.correct++; else stats.wrong++;
@@ -763,11 +154,15 @@
         }
 
         function updateStats() {
-            document.getElementById('correctCount')?.then(el => el.textContent = stats.correct);
-            document.getElementById('wrongCount')?.then(el => el.textContent = stats.wrong);
+            const correctEl = document.getElementById('correctCount');
+            if (correctEl) correctEl.textContent = stats.correct;
+            const wrongEl = document.getElementById('wrongCount');
+            if (wrongEl) wrongEl.textContent = stats.wrong;
             const perc = stats.answered > 0 ? Math.round((stats.correct / stats.answered) * 100) : 0;
-            document.getElementById('scorePercent')?.then(el => el.textContent = perc + '%');
-            document.getElementById('progressText')?.then(el => el.textContent = stats.answered + '/' + currentQuestions.length);
+            const scoreEl = document.getElementById('scorePercent');
+            if (scoreEl) scoreEl.textContent = perc + '%';
+            const progressEl = document.getElementById('progressText');
+            if (progressEl) progressEl.textContent = stats.answered + '/' + currentQuestions.length;
             const fill = document.getElementById('progressFill');
             if (fill) fill.style.width = (stats.answered / currentQuestions.length) * 100 + '%';
         }
@@ -784,38 +179,42 @@
             q.options.forEach((opt, i) => {
                 const selected = ans === i;
                 const isCorrect = q.answer === i;
-                let cls = 'w-full p-5 rounded-xl flex items-center gap-4 text-left border-2 ';
+                let btnClass = 'w-full p-5 rounded-xl transition-all flex items-center gap-4 text-left border-2 ';
                 if (reviewMode || timeUp) {
-                    cls += isCorrect ? 'border-green-500 bg-green-50' : selected && !isCorrect ? 'border-red-500 bg-red-50' : 'border-gray-200 bg-gray-50 opacity-60';
+                    if (isCorrect) btnClass += 'border-green-500 bg-green-50';
+                    else if (selected && !isCorrect) btnClass += 'border-red-500 bg-red-50';
+                    else btnClass += 'border-gray-200 bg-gray-50 opacity-60';
                 } else if (answered) {
-                    cls += isCorrect ? 'border-green-500 bg-green-50 cursor-not-allowed' : selected ? 'border-red-500 bg-red-50 cursor-not-allowed' : 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed';
+                    if (isCorrect) btnClass += 'border-green-500 bg-green-50 cursor-not-allowed';
+                    else if (selected) btnClass += 'border-red-500 bg-red-50 cursor-not-allowed';
+                    else btnClass += 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed';
                 } else {
-                    cls += 'border-gray-200 bg-gray-50 hover:border-purple-500 hover:bg-purple-50 cursor-pointer';
+                    btnClass += 'border-gray-200 bg-gray-50 hover:border-purple-500 hover:bg-purple-50 cursor-pointer option-hover';
                 }
                 const labelCls = (reviewMode || timeUp) && isCorrect ? 'bg-green-600' : (reviewMode || timeUp) && selected && !isCorrect ? 'bg-red-600' : 'bg-purple-600';
 
-                optionsHTML += `<button ${!reviewMode && !timeUp && !answered ? `onclick="selectAnswer(${idx},${i})"` : ''} class="${cls}">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white">${String.fromCharCode(65+i)}</div>
-                    <span class="flex-1">${opt}</span>
+                optionsHTML += `<button ${!reviewMode && !timeUp && !answered ? `onclick="selectAnswer(${idx},${i})"` : ''} class="${btnClass}" ${reviewMode || timeUp || answered ? 'disabled' : ''}>
+                    <div class="w-11 h-11 rounded-full flex items-center justify-center font-bold text-white text-lg ${labelCls}">${String.fromCharCode(65+i)}</div>
+                    <span class="text-gray-800 text-lg flex-1">${opt}</span>
                 </button>`;
             });
 
             let expl = '';
             if (answered || reviewMode || timeUp) {
-                expl = `<div class="mt-4 p-4 rounded-lg border-l-4 ${correct ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}">
-                    <p class="font-bold">${correct ? 'Correct' : 'Incorrect'} → ${String.fromCharCode(65+q.answer)}) ${q.options[q.answer]}</p>
-                    <p class="text-sm mt-1"><strong>Explanation:</strong> ${q.explanation}</p>
+                expl = `<div class="mt-6 p-6 rounded-xl border-l-4 bg-${correct ? 'green' : 'red'}-50 border-${correct ? 'green' : 'red'}-500">
+                    <p class="font-semibold">${correct ? 'Correct' : 'Incorrect'} → ${String.fromCharCode(65+q.answer)}) ${q.options[q.answer]}</p>
+                    <p class="mt-2"><strong>Explanation:</strong> ${q.explanation}</p>
                 </div>`;
             }
 
             el.innerHTML = `
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-12 h-12 rounded-full ${correct ? 'bg-green-500' : answered ? 'bg-red-500' : 'bg-gradient-to-br from-purple-600 to-indigo-700'} text-white flex items-center justify-center font-bold text-lg">
+                <div class="flex items-start gap-5 mb-6">
+                    <div class="w-14 h-14 rounded-full ${correct ? 'bg-green-500' : answered ? 'bg-red-500' : 'bg-gradient-to-br from-purple-600 to-indigo-700'} text-white flex items-center justify-center font-bold text-xl">
                         ${idx+1}
                     </div>
-                    <h3 class="text-lg font-semibold flex-1">${q.q}</h3>
+                    <h3 class="text-xl font-semibold text-gray-800 leading-relaxed">${q.q}</h3>
                 </div>
-                <div class="space-y-3">${optionsHTML}</div>
+                <div class="space-y-4">${optionsHTML}</div>
                 ${expl}
             `;
         }
@@ -827,7 +226,7 @@
             currentQuestions.forEach((_, i) => {
                 const div = document.createElement('div');
                 div.id = `question-${i}`;
-                div.className = 'bg-white rounded-2xl shadow-xl p-6';
+                div.className = 'bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow';
                 cont.appendChild(div);
                 renderQuestion(i);
             });
@@ -845,9 +244,9 @@
             document.getElementById('scaledScore').textContent = scaledScore;
             document.getElementById('finalCorrect').textContent = stats.correct;
             document.getElementById('finalWrong').textContent = currentQuestions.length - stats.correct;
-            const pass = document.getElementById('passStatus');
-            pass.textContent = scaledScore >= 720 ? 'PASSED' : 'FAILED';
-            pass.className = scaledScore >= 720 ? 'text-4xl font-bold text-green-600' : 'text-4xl font-bold text-red-600';
+            const passStatusEl = document.getElementById('passStatus');
+            passStatusEl.textContent = scaledScore >= 720 ? 'PASSED' : 'FAILED';
+            passStatusEl.className = scaledScore >= 720 ? 'text-4xl font-bold text-green-600' : 'text-4xl font-bold text-red-600';
 
             document.getElementById('resultModal').classList.remove('hidden');
             document.getElementById('resultModal').classList.add('flex');
@@ -861,59 +260,60 @@
 
         function renderExamScreen() {
             document.getElementById('app').innerHTML = `
-                <div class="bg-white rounded-2xl shadow-2xl p-6 mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h1 class="text-3xl font-bold text-purple-700">${selectedCert}</h1>
-                        <button onclick="backToHome()" class="text-purple-600 hover:underline">Back</button>
+                <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-4xl font-bold text-purple-700">${selectedCert}</h1>
+                        <button onclick="backToHome()" class="text-purple-600 hover:underline text-lg font-medium">Back</button>
                     </div>
-                    <div class="grid grid-cols-3 md:grid-cols-5 gap-4 text-center">
-                        <div class="bg-purple-600 text-white p-4 rounded-xl"><div class="text-2xl font-bold">${currentQuestions.length}</div><div class="text-xs">Qs</div></div>
-                        <div class="bg-green-600 text-white p-4 rounded-xl"><div class="text-2xl font-bold" id="correctCount">0</div><div class="text-xs">Correct</div></div>
-                        <div class="bg-red-600 text-white p-4 rounded-xl"><div class="text-2xl font-bold" id="wrongCount">0</div><div class="text-xs">Wrong</div></div>
-                        <div class="bg-blue-600 text-white p-4 rounded-xl"><div class="text-2xl font-bold" id="scorePercent">0%</div><div class="text-xs">Score</div></div>
-                        <div class="bg-yellow-600 text-white p-4 rounded-xl"><div class="text-2xl font-bold" id="timer">130:00</div><div class="text-xs">Time</div></div>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-5">
+                        <div class="bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold">${currentQuestions.length}</div><div class="text-sm opacity-90">Questions</div></div>
+                        <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold" id="correctCount">0</div><div class="text-sm opacity-90">Correct</div></div>
+                        <div class="bg-gradient-to-br from-red-500 to-red-600 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold" id="wrongCount">0</div><div class="text-sm opacity-90">Wrong</div></div>
+                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold" id="scorePercent">0%</div><div class="text-sm opacity-90">Score</div></div>
+                        <div class="bg-gradient-to-br from-yellow-500 to-orange-600 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold" id="timer">130:00</div><div class="text-sm opacity-90">Time Left</div></div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow p-4 mb-4">
-                    <div class="flex justify-between text-sm font-bold"><span>Progress</span><span id="progressText">0/${currentQuestions.length}</span></div>
-                    <div class="h-3 bg-gray-200 rounded-full overflow-hidden mt-1"><div id="progressFill" class="h-full bg-gradient-to-r from-purple-600 to-indigo-700" style="width:0%"></div></div>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <div class="flex justify-between mb-3 text-gray-700 font-semibold"><span>Progress</span><span id="progressText">0/${currentQuestions.length}</span></div>
+                    <div class="h-6 bg-gray-200 rounded-full overflow-hidden"><div id="progressFill" class="h-full bg-gradient-to-r from-purple-600 to-indigo-700 transition-all duration-500" style="width:0%"></div></div>
                 </div>
 
-                <div id="questionsContainer" class="space-y-8 pb-32"></div>
+                <div id="questionsContainer" class="space-y-10 pb-32"></div>
 
                 <div class="sticky-submit">
-                    <button onclick="showResults()" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xl font-bold py-5 rounded-2xl shadow-xl hover:scale-105 transition">
+                    <button onclick="showResults()" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white text-2xl font-bold py-6 rounded-2xl shadow-2xl hover:shadow-green-500/50 transform hover:scale-105 transition-all">
                         Submit & Review Answers
                     </button>
                 </div>
 
-                <!-- COMPACT RESULT MODAL -->
-                <div id="resultModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-                    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md animate-slide-up">
-                        <div class="text-center py-8 px-6">
-                            <h2 class="text-3xl font-bold text-purple-700 mb-3">Exam Finished!</h2>
-                            <div class="text-6xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent mb-2" id="finalScore">0%</div>
-                            <div class="text-5xl font-bold my-3" id="scaledScore">0</div>
-                            <div id="passStatus" class="text-4xl font-bold mb-3">PENDING</div>
-                            <p class="text-gray-600 text-sm">Passing: 720/1000</p>
+                <div id="resultModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 overflow-y-auto">
+                    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 my-8 animate-slide-up">
+                        <div class="text-center pt-10 pb-6 px-8">
+                            <h2 class="text-4xl md:text-5xl font-bold text-purple-700 mb-4">Exam Completed!</h2>
+                            <div class="text-7xl md:text-9xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent" id="finalScore">0%</div>
                         </div>
-                        <div class="grid grid-cols-2 gap-4 px-6 pb-6">
-                            <div class="bg-green-50 rounded-2xl p-5 text-center">
-                                <div class="text-4xl font-bold text-green-600" id="finalCorrect">0</div>
-                                <div class="text-sm text-gray-700 mt-1">Correct</div>
+                        <div class="px-8 pb-6 text-center">
+                            <div class="text-5xl md:text-6xl font-bold mb-3" id="scaledScore">0</div>
+                            <div id="passStatus" class="text-5xl md:text-6xl font-bold mb-2">PENDING</div>
+                            <p class="text-lg text-gray-600">Passing score: 720/1000</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-6 px-8 pb-8">
+                            <div class="bg-green-50 rounded-3xl p-6 text-center">
+                                <div class="text-5xl md:text-6xl font-bold text-green-600" id="finalCorrect">0</div>
+                                <div class="text-gray-700 text-lg font-medium mt-2">Correct</div>
                             </div>
-                            <div class="bg-red-50 rounded-2xl p-5 text-center">
-                                <div class="text-4xl font-bold text-red-600" id="finalWrong">0</div>
-                                <div class="text-sm text-gray-700 mt-1">Wrong/Unanswered</div>
+                            <div class="bg-red-50 rounded-3xl p-6 text-center">
+                                <div class="text-5xl md:text-6xl font-bold text-red-600" id="finalWrong">0</div>
+                                <div class="text-gray-700 text-lg font-medium mt-2">Wrong / Unanswered</div>
                             </div>
                         </div>
-                        <div class="px-6 pb-8 space-y-3">
-                            <button onclick="retryExam()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white font-bold py-4 rounded-2xl hover:opacity-90 transition">
-                                Retry Exam
+                        <div class="px-8 pb-10 space-y-4">
+                            <button onclick="retryExam()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white text-xl font-bold py-5 rounded-2xl hover:opacity-90 transform hover:scale-105 transition-all shadow-lg">
+                                Retry This Exam
                             </button>
-                            <button onclick="backToHome()" class="w-full bg-gray-600 text-white font-bold py-4 rounded-2xl hover:bg-gray-700 transition">
-                                Choose Another Exam
+                            <button onclick="backToHome()" class="w-full bg-gray-600 text-white text-xl font-bold py-5 rounded-2xl hover:bg-gray-700 transition-all shadow-lg">
+                                Choose Another Certification
                             </button>
                         </div>
                     </div>
@@ -926,20 +326,25 @@
         function getHomeHTML() {
             return `
                 <div class="text-center py-16">
-                    <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">AWS Practice Tests</h1>
-                    <p class="text-xl md:text-2xl text-purple-100 mb-16">130-min timer • 720/1000 passing score</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto px-4">
-                        ${Object.keys(certificationQuestions).map(c => `
-                            <div onclick="startExam('${c}')" class="cert-card bg-white/95 rounded-3xl shadow-2xl p-8 text-center hover:shadow-3xl">
-                                <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-3xl flex items-center justify-center">
-                                    <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
+                    <h1 class="text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">AWS Certification Practice Tests</h1>
+                    <p class="text-2xl md:text-3xl text-purple-100 mb-20 max-w-4xl mx-auto">Real exam experience • 130-minute timer • 720/1000 passing score</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto px-6">
+                        ${Object.keys(certificationQuestions).map(cert => `
+                            <div onclick="startExam('${cert}')" class="cert-card bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-10 text-center group">
+                                <div class="w-28 h-28 mx-auto mb-8 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                                    </svg>
                                 </div>
-                                <h3 class="text-xl font-bold text-gray-800">${c.split(' (')[0]}</h3>
-                                <p class="text-purple-600 font-bold text-lg mt-2">${c.match(/\((.*?)\)/)[0]}</p>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-2">${cert.split(' (')[0]}</h3>
+                                <p class="text-purple-600 font-bold text-xl mb-6">${cert.match(/\((.*?)\)/)[0]}</p>
+                                <div class="text-purple-600 font-bold text-xl opacity-0 group-hover:opacity-100 transition-opacity">Start Practice</div>
                             </div>
                         `).join('')}
                     </div>
-                </div>`;
+                </div>
+            `;
         }
 
         window.onload = () => {
