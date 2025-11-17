@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -768,13 +769,23 @@
             }
         ];
 
+        let currentQuestions = [];
         let userAnswers = {};
         let stats = { correct: 0, wrong: 0, answered: 0 };
+        let timeLeft = 130 * 60; // 130 minutes in seconds
+        let timerInterval;
+        let timeUp = false;
+
+        function selectQuestions() {
+            // Shuffle the full questions array and select the first 65
+            const shuffled = [...questions].sort(() => 0.5 - Math.random());
+            currentQuestions = shuffled.slice(0, 65);
+        }
 
         function selectAnswer(questionIndex, optionIndex) {
-            if (userAnswers[questionIndex] !== undefined) return;
+            if (timeUp || userAnswers[questionIndex] !== undefined) return;
 
-            const question = questions[questionIndex];
+            const question = currentQuestions[questionIndex];
             const isCorrect = optionIndex === question.answer;
 
             userAnswers[questionIndex] = optionIndex;
@@ -794,13 +805,13 @@
             document.getElementById('wrongCount').textContent = stats.wrong;
             const percentage = stats.answered > 0 ? Math.round((stats.correct / stats.answered) * 100) : 0;
             document.getElementById('scorePercent').textContent = percentage + '%';
-            document.getElementById('progressText').textContent = stats.answered + '/' + questions.length;
-            const progressPercent = (stats.answered / questions.length) * 100;
+            document.getElementById('progressText').textContent = stats.answered + '/' + currentQuestions.length;
+            const progressPercent = (stats.answered / currentQuestions.length) * 100;
             document.getElementById('progressFill').style.width = progressPercent + '%';
         }
 
         function renderQuestion(qIndex) {
-            const q = questions[qIndex];
+            const q = currentQuestions[qIndex];
             const userAnswer = userAnswers[qIndex];
             const isAnswered = userAnswer !== undefined;
             const isCorrect = userAnswer === q.answer;
@@ -878,7 +889,7 @@
             const container = document.getElementById('questionsContainer');
             container.innerHTML = '';
             
-            questions.forEach((q, qIndex) => {
+            currentQuestions.forEach((q, qIndex) => {
                 const questionDiv = document.createElement('div');
                 questionDiv.id = 'question-' + qIndex;
                 questionDiv.className = 'bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow';
@@ -888,7 +899,7 @@
         }
 
         function scrollToNextUnanswered() {
-            for (let i = 0; i < questions.length; i++) {
+            for (let i = 0; i < currentQuestions.length; i++) {
                 if (userAnswers[i] === undefined) {
                     document.getElementById('question-' + i).scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return;
@@ -898,16 +909,17 @@
         }
 
         function showResults() {
+            clearInterval(timerInterval);
             if (stats.answered === 0) {
                 alert('Please answer at least one question!');
                 return;
             }
             document.getElementById('resultModal').classList.remove('hidden');
             document.getElementById('resultModal').classList.add('flex');
-            const percentage = Math.round((stats.correct / stats.answered) * 100);
+            const percentage = Math.round((stats.correct / currentQuestions.length) * 100);
             document.getElementById('finalScore').textContent = percentage + '%';
             document.getElementById('finalCorrect').textContent = stats.correct;
-            document.getElementById('finalWrong').textContent = stats.wrong;
+            document.getElementById('finalWrong').textContent = currentQuestions.length - stats.correct;
         }
 
         function closeResults() {
@@ -917,15 +929,40 @@
 
         function resetQuiz() {
             if (confirm('Are you sure you want to reset the quiz? All progress will be lost.')) {
+                clearInterval(timerInterval);
+                selectQuestions();
                 userAnswers = {};
                 stats = { correct: 0, wrong: 0, answered: 0 };
+                timeUp = false;
                 updateStats();
                 renderAllQuestions();
+                startTimer();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
+        function startTimer() {
+            timeLeft = 130 * 60;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timeUp = true;
+                    showResults();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const min = Math.floor(timeLeft / 60);
+            const sec = timeLeft % 60;
+            document.getElementById('timer').textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
         function init() {
+            selectQuestions();
             const app = document.getElementById('app');
             app.innerHTML = `
                 <!-- Header -->
@@ -934,9 +971,9 @@
                     <p class="text-gray-600 text-lg mb-6">Test your knowledge with interactive questions and instant feedback</p>
                     
                     <!-- Stats -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
                         <div class="bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-4 rounded-xl text-center">
-                            <div class="text-3xl font-bold">${questions.length}</div>
+                            <div class="text-3xl font-bold">65</div>
                             <div class="text-sm opacity-90">Total Questions</div>
                         </div>
                         <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-xl text-center">
@@ -951,6 +988,10 @@
                             <div class="text-3xl font-bold" id="scorePercent">0%</div>
                             <div class="text-sm opacity-90">Score</div>
                         </div>
+                        <div class="bg-gradient-to-br from-yellow-500 to-orange-600 text-white p-4 rounded-xl text-center">
+                            <div class="text-3xl font-bold" id="timer">130:00</div>
+                            <div class="text-sm opacity-90">Time Remaining</div>
+                        </div>
                     </div>
                 </div>
 
@@ -958,7 +999,7 @@
                 <div class="bg-white rounded-xl shadow-lg p-5 mb-6">
                     <div class="flex justify-between mb-2 text-gray-700 font-semibold">
                         <span>Progress</span>
-                        <span id="progressText">0/${questions.length}</span>
+                        <span id="progressText">0/65</span>
                     </div>
                     <div class="h-5 bg-gray-200 rounded-full overflow-hidden">
                         <div id="progressFill" class="h-full bg-gradient-to-r from-purple-600 to-indigo-700 transition-all duration-500 rounded-full" style="width: 0%"></div>
@@ -1011,9 +1052,11 @@
 
             renderAllQuestions();
             updateStats();
+            startTimer();
         }
 
         init();
     </script>
 </body>
 </html>
+```
