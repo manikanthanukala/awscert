@@ -1,316 +1,359 @@
-import React, { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, RotateCcw, Award } from 'lucide-react';
-
-const AWSPracticeTest = () => {
-  const [userAnswers, setUserAnswers] = useState({});
-  const [stats, setStats] = useState({ correct: 0, wrong: 0, answered: 0 });
-  const [showResultModal, setShowResultModal] = useState(false);
-
-  const questions = [
-    {
-      q: "What is the AWS shared responsibility model?",
-      options: ["AWS manages everything", "Customer manages everything", "AWS manages security OF the cloud, customer manages security IN the cloud", "AWS and customer share all responsibilities equally"],
-      answer: 2,
-      explanation: "In the AWS shared responsibility model, AWS is responsible for security OF the cloud (infrastructure, hardware, software), while customers are responsible for security IN the cloud (data, applications, access management)."
-    },
-    {
-      q: "Which AWS service provides object storage?",
-      options: ["Amazon EBS", "Amazon S3", "Amazon EFS", "Amazon RDS"],
-      answer: 1,
-      explanation: "Amazon S3 (Simple Storage Service) is designed for object storage, allowing you to store and retrieve any amount of data. EBS is block storage, EFS is file storage, and RDS is database service."
-    },
-    {
-      q: "What is Amazon EC2?",
-      options: ["A storage service", "A virtual server in the cloud", "A database service", "A content delivery network"],
-      answer: 1,
-      explanation: "Amazon EC2 (Elastic Compute Cloud) provides resizable virtual servers in the cloud, allowing you to run applications and workloads."
-    },
-    {
-      q: "Which AWS service is used for DNS management?",
-      options: ["Amazon CloudFront", "Amazon Route 53", "AWS Direct Connect", "Amazon VPC"],
-      answer: 1,
-      explanation: "Amazon Route 53 is AWS's scalable Domain Name System (DNS) web service that routes end users to applications."
-    },
-    {
-      q: "What does AWS Lambda allow you to do?",
-      options: ["Run code without provisioning servers", "Provision virtual machines", "Create databases", "Configure networks"],
-      answer: 0,
-      explanation: "AWS Lambda is a serverless compute service that runs your code in response to events without requiring you to provision or manage servers."
-    },
-    {
-      q: "Which service provides a managed relational database?",
-      options: ["Amazon DynamoDB", "Amazon S3", "Amazon RDS", "Amazon Redshift"],
-      answer: 2,
-      explanation: "Amazon RDS (Relational Database Service) provides managed relational databases including MySQL, PostgreSQL, Oracle, SQL Server, and MariaDB."
-    },
-    {
-      q: "What is Amazon CloudFront?",
-      options: ["A database service", "A content delivery network (CDN)", "A compute service", "A storage service"],
-      answer: 1,
-      explanation: "Amazon CloudFront is a fast content delivery network (CDN) that securely delivers data, videos, applications, and APIs to customers globally with low latency."
-    },
-    {
-      q: "Which AWS service helps you track user activity and API usage?",
-      options: ["AWS CloudTrail", "Amazon CloudWatch", "AWS Config", "AWS X-Ray"],
-      answer: 0,
-      explanation: "AWS CloudTrail records AWS API calls and delivers log files for auditing and compliance, tracking who did what and when in your AWS account."
-    },
-    {
-      q: "What is the AWS Free Tier?",
-      options: ["Unlimited free services", "Limited free usage of certain AWS services", "Enterprise support included", "Free for non-profits only"],
-      answer: 1,
-      explanation: "AWS Free Tier provides limited free usage of certain AWS services for 12 months after signup, plus always-free tiers for some services."
-    },
-    {
-      q: "Which service provides NoSQL database functionality?",
-      options: ["Amazon RDS", "Amazon DynamoDB", "Amazon Aurora", "Amazon Redshift"],
-      answer: 1,
-      explanation: "Amazon DynamoDB is a fully managed NoSQL database service that provides fast and predictable performance with seamless scalability."
-    }
-  ];
-
-  const selectAnswer = (questionIndex, optionIndex) => {
-    if (userAnswers[questionIndex] !== undefined) return;
-
-    const question = questions[questionIndex];
-    const isCorrect = optionIndex === question.answer;
-
-    setUserAnswers(prev => ({ ...prev, [questionIndex]: optionIndex }));
-    setStats(prev => ({
-      correct: prev.correct + (isCorrect ? 1 : 0),
-      wrong: prev.wrong + (isCorrect ? 0 : 1),
-      answered: prev.answered + 1
-    }));
-  };
-
-  const resetQuiz = () => {
-    if (window.confirm('Are you sure you want to reset the quiz? All progress will be lost.')) {
-      setUserAnswers({});
-      setStats({ correct: 0, wrong: 0, answered: 0 });
-      setShowResultModal(false);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const scrollToNextUnanswered = () => {
-    for (let i = 0; i < questions.length; i++) {
-      if (userAnswers[i] === undefined) {
-        const element = document.getElementById(`question-${i}`);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Cloud Practitioner Practice Tests</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        return;
-      }
-    }
-    alert('All questions answered! Click "Show Results" to see your final score.');
-  };
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-slide-down {
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        .option-hover:hover {
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 min-h-screen">
+    <div id="app" class="container mx-auto px-4 py-6 max-w-4xl"></div>
 
-  const percentage = stats.answered > 0 ? Math.round((stats.correct / stats.answered) * 100) : 0;
-  const progressPercent = (stats.answered / questions.length) * 100;
+    <script>
+        const questions = [
+            {
+                q: "What is the AWS shared responsibility model?",
+                options: ["AWS manages everything", "Customer manages everything", "AWS manages security OF the cloud, customer manages security IN the cloud", "AWS and customer share all responsibilities equally"],
+                answer: 2,
+                explanation: "In the AWS shared responsibility model, AWS is responsible for security OF the cloud (infrastructure, hardware, software), while customers are responsible for security IN the cloud (data, applications, access management)."
+            },
+            {
+                q: "Which AWS service provides object storage?",
+                options: ["Amazon EBS", "Amazon S3", "Amazon EFS", "Amazon RDS"],
+                answer: 1,
+                explanation: "Amazon S3 (Simple Storage Service) is designed for object storage, allowing you to store and retrieve any amount of data. EBS is block storage, EFS is file storage, and RDS is database service."
+            },
+            {
+                q: "What is Amazon EC2?",
+                options: ["A storage service", "A virtual server in the cloud", "A database service", "A content delivery network"],
+                answer: 1,
+                explanation: "Amazon EC2 (Elastic Compute Cloud) provides resizable virtual servers in the cloud, allowing you to run applications and workloads."
+            },
+            {
+                q: "Which AWS service is used for DNS management?",
+                options: ["Amazon CloudFront", "Amazon Route 53", "AWS Direct Connect", "Amazon VPC"],
+                answer: 1,
+                explanation: "Amazon Route 53 is AWS's scalable Domain Name System (DNS) web service that routes end users to applications."
+            },
+            {
+                q: "What does AWS Lambda allow you to do?",
+                options: ["Run code without provisioning servers", "Provision virtual machines", "Create databases", "Configure networks"],
+                answer: 0,
+                explanation: "AWS Lambda is a serverless compute service that runs your code in response to events without requiring you to provision or manage servers."
+            },
+            {
+                q: "Which service provides a managed relational database?",
+                options: ["Amazon DynamoDB", "Amazon S3", "Amazon RDS", "Amazon Redshift"],
+                answer: 2,
+                explanation: "Amazon RDS (Relational Database Service) provides managed relational databases including MySQL, PostgreSQL, Oracle, SQL Server, and MariaDB."
+            },
+            {
+                q: "What is Amazon CloudFront?",
+                options: ["A database service", "A content delivery network (CDN)", "A compute service", "A storage service"],
+                answer: 1,
+                explanation: "Amazon CloudFront is a fast content delivery network (CDN) that securely delivers data, videos, applications, and APIs to customers globally with low latency."
+            },
+            {
+                q: "Which AWS service helps you track user activity and API usage?",
+                options: ["AWS CloudTrail", "Amazon CloudWatch", "AWS Config", "AWS X-Ray"],
+                answer: 0,
+                explanation: "AWS CloudTrail records AWS API calls and delivers log files for auditing and compliance, tracking who did what and when in your AWS account."
+            },
+            {
+                q: "What is the AWS Free Tier?",
+                options: ["Unlimited free services", "Limited free usage of certain AWS services", "Enterprise support included", "Free for non-profits only"],
+                answer: 1,
+                explanation: "AWS Free Tier provides limited free usage of certain AWS services for 12 months after signup, plus always-free tiers for some services."
+            },
+            {
+                q: "Which service provides NoSQL database functionality?",
+                options: ["Amazon RDS", "Amazon DynamoDB", "Amazon Aurora", "Amazon Redshift"],
+                answer: 1,
+                explanation: "Amazon DynamoDB is a fully managed NoSQL database service that provides fast and predictable performance with seamless scalability."
+            }
+        ];
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 mb-8">
-          <h1 className="text-4xl font-bold text-purple-700 mb-3">
-            🎓 AWS Cloud Practitioner Practice Tests
-          </h1>
-          <p className="text-gray-600 text-lg mb-6">
-            Test your knowledge with interactive questions and instant feedback
-          </p>
-          
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-4 rounded-xl text-center">
-              <div className="text-3xl font-bold">{questions.length}</div>
-              <div className="text-sm opacity-90">Total Questions</div>
-            </div>
-            <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-xl text-center">
-              <div className="text-3xl font-bold">{stats.correct}</div>
-              <div className="text-sm opacity-90">Correct</div>
-            </div>
-            <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-xl text-center">
-              <div className="text-3xl font-bold">{stats.wrong}</div>
-              <div className="text-sm opacity-90">Wrong</div>
-            </div>
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl text-center">
-              <div className="text-3xl font-bold">{percentage}%</div>
-              <div className="text-sm opacity-90">Score</div>
-            </div>
-          </div>
-        </div>
+        let userAnswers = {};
+        let stats = { correct: 0, wrong: 0, answered: 0 };
 
-        {/* Progress Bar */}
-        <div className="bg-white rounded-xl shadow-lg p-5 mb-6">
-          <div className="flex justify-between mb-2 text-gray-700 font-semibold">
-            <span>Progress</span>
-            <span>{stats.answered}/{questions.length}</span>
-          </div>
-          <div className="h-5 bg-gray-200 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-purple-600 to-indigo-700 transition-all duration-500 rounded-full"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-        </div>
+        function selectAnswer(questionIndex, optionIndex) {
+            if (userAnswers[questionIndex] !== undefined) return;
 
-        {/* Controls */}
-        <div className="bg-white rounded-xl shadow-lg p-5 mb-6 flex flex-wrap gap-3">
-          <button
-            onClick={scrollToNextUnanswered}
-            className="flex-1 min-w-fit bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-all transform hover:scale-105"
-          >
-            Next Unanswered
-          </button>
-          <button
-            onClick={() => stats.answered > 0 && setShowResultModal(true)}
-            className="flex-1 min-w-fit bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105"
-          >
-            Show Results
-          </button>
-          <button
-            onClick={resetQuiz}
-            className="flex-1 min-w-fit bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
-          >
-            <RotateCcw size={18} /> Reset Quiz
-          </button>
-        </div>
+            const question = questions[questionIndex];
+            const isCorrect = optionIndex === question.answer;
 
-        {/* Questions */}
-        <div className="space-y-6">
-          {questions.map((q, qIndex) => {
+            userAnswers[questionIndex] = optionIndex;
+            stats.answered++;
+            if (isCorrect) {
+                stats.correct++;
+            } else {
+                stats.wrong++;
+            }
+
+            renderQuestion(questionIndex);
+            updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById('correctCount').textContent = stats.correct;
+            document.getElementById('wrongCount').textContent = stats.wrong;
+            const percentage = stats.answered > 0 ? Math.round((stats.correct / stats.answered) * 100) : 0;
+            document.getElementById('scorePercent').textContent = percentage + '%';
+            document.getElementById('progressText').textContent = stats.answered + '/' + questions.length;
+            const progressPercent = (stats.answered / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+        }
+
+        function renderQuestion(qIndex) {
+            const q = questions[qIndex];
             const userAnswer = userAnswers[qIndex];
             const isAnswered = userAnswer !== undefined;
             const isCorrect = userAnswer === q.answer;
 
-            return (
-              <div 
-                key={qIndex}
-                id={`question-${qIndex}`}
-                className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow"
-              >
-                {/* Question Header */}
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-indigo-700 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
-                    {qIndex + 1}
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-800 leading-relaxed">
-                    {q.q}
-                  </h3>
-                </div>
-
-                {/* Options */}
-                <div className="space-y-3">
-                  {q.options.map((option, optIndex) => {
-                    const isSelected = userAnswer === optIndex;
-                    const isCorrectOption = q.answer === optIndex;
-                    
-                    let optionClass = "border-2 border-gray-200 bg-gray-50 hover:border-purple-500 hover:bg-purple-50";
-                    
-                    if (isAnswered) {
-                      if (isCorrectOption) {
-                        optionClass = "border-2 border-green-500 bg-green-50";
-                      } else if (isSelected && !isCorrect) {
-                        optionClass = "border-2 border-red-500 bg-red-50";
-                      }
+            const questionEl = document.getElementById('question-' + qIndex);
+            
+            let optionsHTML = '';
+            q.options.forEach((option, optIndex) => {
+                const isSelected = userAnswer === optIndex;
+                const isCorrectOption = q.answer === optIndex;
+                
+                let buttonClass = 'w-full p-5 rounded-xl transition-all flex items-center gap-4 text-left border-2 ';
+                
+                if (isAnswered) {
+                    if (isCorrectOption) {
+                        buttonClass += 'border-green-500 bg-green-50 cursor-not-allowed';
+                    } else if (isSelected && !isCorrect) {
+                        buttonClass += 'border-red-500 bg-red-50 cursor-not-allowed';
+                    } else {
+                        buttonClass += 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-60';
                     }
+                } else {
+                    buttonClass += 'border-gray-200 bg-gray-50 hover:border-purple-500 hover:bg-purple-50 cursor-pointer option-hover';
+                }
 
-                    return (
-                      <button
-                        key={optIndex}
-                        onClick={() => selectAnswer(qIndex, optIndex)}
-                        disabled={isAnswered}
-                        className={`w-full p-5 rounded-xl transition-all flex items-center gap-4 text-left ${optionClass} ${isAnswered ? 'cursor-not-allowed' : 'cursor-pointer hover:translate-x-1'}`}
-                      >
-                        <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-white flex-shrink-0 ${
-                          isAnswered && isCorrectOption ? 'bg-green-600' :
-                          isAnswered && isSelected && !isCorrect ? 'bg-red-600' :
-                          'bg-purple-600'
-                        }`}>
-                          {String.fromCharCode(65 + optIndex)}
+                const labelClass = isAnswered && isCorrectOption ? 'bg-green-600' :
+                                  isAnswered && isSelected && !isCorrect ? 'bg-red-600' :
+                                  'bg-purple-600';
+
+                const checkIcon = isAnswered && isCorrectOption ? 
+                    '<svg class="ml-auto text-green-600" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' : '';
+                
+                const xIcon = isAnswered && isSelected && !isCorrect ? 
+                    '<svg class="ml-auto text-red-600" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' : '';
+
+                optionsHTML += '<button onclick="selectAnswer(' + qIndex + ', ' + optIndex + ')" class="' + buttonClass + '" ' + (isAnswered ? 'disabled' : '') + '>' +
+                    '<div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-white flex-shrink-0 ' + labelClass + '">' +
+                        String.fromCharCode(65 + optIndex) +
+                    '</div>' +
+                    '<span class="text-gray-800 text-lg">' + option + '</span>' +
+                    checkIcon + xIcon +
+                '</button>';
+            });
+
+            let explanationHTML = '';
+            if (isAnswered) {
+                const expClass = isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500';
+                const icon = isCorrect ? '✅' : '❌';
+                const title = isCorrect ? 'Correct!' : 'Incorrect';
+                
+                explanationHTML = '<div class="mt-6 p-6 rounded-xl border-l-4 ' + expClass + ' animate-slide-down">' +
+                    '<div class="flex items-center gap-2 mb-3">' +
+                        '<span class="text-2xl">' + icon + '</span>' +
+                        '<span class="font-bold text-lg">' + title + '</span>' +
+                    '</div>' +
+                    '<div class="text-gray-700 leading-relaxed">' +
+                        '<p class="mb-2"><strong>Correct Answer:</strong> ' + String.fromCharCode(65 + q.answer) + ') ' + q.options[q.answer] + '</p>' +
+                        '<p><strong>Explanation:</strong> ' + q.explanation + '</p>' +
+                    '</div>' +
+                '</div>';
+            }
+
+            questionEl.innerHTML = 
+                '<div class="flex items-start gap-4 mb-6">' +
+                    '<div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-indigo-700 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">' +
+                        (qIndex + 1) +
+                    '</div>' +
+                    '<h3 class="text-xl font-semibold text-gray-800 leading-relaxed">' + q.q + '</h3>' +
+                '</div>' +
+                '<div class="space-y-3">' + optionsHTML + '</div>' +
+                explanationHTML;
+        }
+
+        function renderAllQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            
+            questions.forEach((q, qIndex) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.id = 'question-' + qIndex;
+                questionDiv.className = 'bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow';
+                container.appendChild(questionDiv);
+                renderQuestion(qIndex);
+            });
+        }
+
+        function scrollToNextUnanswered() {
+            for (let i = 0; i < questions.length; i++) {
+                if (userAnswers[i] === undefined) {
+                    document.getElementById('question-' + i).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+            }
+            alert('All questions answered! Click "Show Results" to see your final score.');
+        }
+
+        function showResults() {
+            if (stats.answered === 0) {
+                alert('Please answer at least one question!');
+                return;
+            }
+            document.getElementById('resultModal').classList.remove('hidden');
+            document.getElementById('resultModal').classList.add('flex');
+            const percentage = Math.round((stats.correct / stats.answered) * 100);
+            document.getElementById('finalScore').textContent = percentage + '%';
+            document.getElementById('finalCorrect').textContent = stats.correct;
+            document.getElementById('finalWrong').textContent = stats.wrong;
+        }
+
+        function closeResults() {
+            document.getElementById('resultModal').classList.add('hidden');
+            document.getElementById('resultModal').classList.remove('flex');
+        }
+
+        function resetQuiz() {
+            if (confirm('Are you sure you want to reset the quiz? All progress will be lost.')) {
+                userAnswers = {};
+                stats = { correct: 0, wrong: 0, answered: 0 };
+                updateStats();
+                renderAllQuestions();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function init() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <!-- Header -->
+                <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                    <h1 class="text-4xl font-bold text-purple-700 mb-3">🎓 AWS Cloud Practitioner Practice Tests</h1>
+                    <p class="text-gray-600 text-lg mb-6">Test your knowledge with interactive questions and instant feedback</p>
+                    
+                    <!-- Stats -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-4 rounded-xl text-center">
+                            <div class="text-3xl font-bold">${questions.length}</div>
+                            <div class="text-sm opacity-90">Total Questions</div>
                         </div>
-                        <span className="text-gray-800 text-lg">{option}</span>
-                        {isAnswered && isCorrectOption && (
-                          <CheckCircle className="ml-auto text-green-600" size={24} />
-                        )}
-                        {isAnswered && isSelected && !isCorrect && (
-                          <XCircle className="ml-auto text-red-600" size={24} />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Explanation */}
-                {isAnswered && (
-                  <div className={`mt-6 p-6 rounded-xl border-l-4 ${
-                    isCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'
-                  }`}>
-                    <div className="flex items-center gap-2 mb-3">
-                      {isCorrect ? (
-                        <CheckCircle className="text-green-600" size={24} />
-                      ) : (
-                        <XCircle className="text-red-600" size={24} />
-                      )}
-                      <span className="font-bold text-lg">
-                        {isCorrect ? 'Correct!' : 'Incorrect'}
-                      </span>
+                        <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-xl text-center">
+                            <div class="text-3xl font-bold" id="correctCount">0</div>
+                            <div class="text-sm opacity-90">Correct</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-xl text-center">
+                            <div class="text-3xl font-bold" id="wrongCount">0</div>
+                            <div class="text-sm opacity-90">Wrong</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl text-center">
+                            <div class="text-3xl font-bold" id="scorePercent">0%</div>
+                            <div class="text-sm opacity-90">Score</div>
+                        </div>
                     </div>
-                    <div className="text-gray-700 leading-relaxed">
-                      <p className="mb-2">
-                        <strong>Correct Answer:</strong> {String.fromCharCode(65 + q.answer)}) {q.options[q.answer]}
-                      </p>
-                      <p>
-                        <strong>Explanation:</strong> {q.explanation}
-                      </p>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="bg-white rounded-xl shadow-lg p-5 mb-6">
+                    <div class="flex justify-between mb-2 text-gray-700 font-semibold">
+                        <span>Progress</span>
+                        <span id="progressText">0/${questions.length}</span>
                     </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Result Modal */}
-        {showResultModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl p-10 max-w-md w-full text-center shadow-2xl animate-scale">
-              <Award className="mx-auto text-purple-600 mb-4" size={64} />
-              <h2 className="text-4xl font-bold text-purple-700 mb-4">Quiz Complete!</h2>
-              <div className="text-7xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent my-6">
-                {percentage}%
-              </div>
-              <div className="flex gap-6 justify-center mb-8">
-                <div className="bg-green-50 p-5 rounded-xl">
-                  <div className="text-4xl font-bold text-green-600">{stats.correct}</div>
-                  <div className="text-gray-600">Correct</div>
+                    <div class="h-5 bg-gray-200 rounded-full overflow-hidden">
+                        <div id="progressFill" class="h-full bg-gradient-to-r from-purple-600 to-indigo-700 transition-all duration-500 rounded-full" style="width: 0%"></div>
+                    </div>
                 </div>
-                <div className="bg-red-50 p-5 rounded-xl">
-                  <div className="text-4xl font-bold text-red-600">{stats.wrong}</div>
-                  <div className="text-gray-600">Wrong</div>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <button
-                  onClick={() => setShowResultModal(false)}
-                  className="w-full bg-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-purple-700 transition-all"
-                >
-                  Continue Practice
-                </button>
-                <button
-                  onClick={() => { resetQuiz(); setShowResultModal(false); }}
-                  className="w-full bg-red-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-red-700 transition-all"
-                >
-                  Start Over
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
 
-export default AWSPracticeTest;
+                <!-- Controls -->
+                <div class="bg-white rounded-xl shadow-lg p-5 mb-6 flex flex-wrap gap-3">
+                    <button onclick="scrollToNextUnanswered()" class="flex-1 min-w-fit bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-all transform hover:scale-105">
+                        Next Unanswered
+                    </button>
+                    <button onclick="showResults()" class="flex-1 min-w-fit bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105">
+                        Show Results
+                    </button>
+                    <button onclick="resetQuiz()" class="flex-1 min-w-fit bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-all transform hover:scale-105">
+                        🔄 Reset Quiz
+                    </button>
+                </div>
+
+                <!-- Questions Container -->
+                <div id="questionsContainer" class="space-y-6"></div>
+
+                <!-- Result Modal -->
+                <div id="resultModal" class="hidden fixed inset-0 bg-black bg-opacity-70 items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-3xl p-10 max-w-md w-full text-center shadow-2xl animate-slide-up">
+                        <div class="text-6xl mb-4">🏆</div>
+                        <h2 class="text-4xl font-bold text-purple-700 mb-4">Quiz Complete!</h2>
+                        <div id="finalScore" class="text-7xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent my-6">0%</div>
+                        <div class="flex gap-6 justify-center mb-8">
+                            <div class="bg-green-50 p-5 rounded-xl">
+                                <div id="finalCorrect" class="text-4xl font-bold text-green-600">0</div>
+                                <div class="text-gray-600">Correct</div>
+                            </div>
+                            <div class="bg-red-50 p-5 rounded-xl">
+                                <div id="finalWrong" class="text-4xl font-bold text-red-600">0</div>
+                                <div class="text-gray-600">Wrong</div>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <button onclick="closeResults()" class="w-full bg-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-purple-700 transition-all">
+                                Continue Practice
+                            </button>
+                            <button onclick="resetQuiz(); closeResults();" class="w-full bg-red-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-red-700 transition-all">
+                                Start Over
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            renderAllQuestions();
+            updateStats();
+        }
+
+        init();
+    </script>
+</body>
+</html>
