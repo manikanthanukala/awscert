@@ -25,22 +25,39 @@
     <div id="app" class="container mx-auto px-4 py-6 max-w-7xl"></div>
 
     <script>
+        // Full 6 certifications with sample questions (you can replace with real ones later)
         const certificationQuestions = {
-            "AWS Certified Cloud Practitioner (CLF-C02)": [ /* your full 100+ questions here later */ ],
-            "AWS Certified Solutions Architect – Associate (SAA-C03)": [ /* ... */ ],
-            // ... other certifications
+            "AWS Certified Cloud Practitioner (CLF-C02)": [
+                { q: "What is the AWS shared responsibility model?", options: ["AWS manages everything", "Customer manages everything", "AWS manages security OF the cloud, customer manages security IN the cloud", "Shared equally"], answer: 2, explanation: "AWS is responsible for security OF the cloud, customers for security IN the cloud." },
+                { q: "Which service is object storage?", options: ["EBS", "S3", "EFS", "RDS"], answer: 1, explanation: "Amazon S3 is object storage." },
+                { q: "Which pricing model gives the biggest savings?", options: ["On-Demand", "Spot", "Savings Plans", "Reserved Instances"], answer: 2, explanation: "Savings Plans offer flexibility and high savings." }
+            ],
+            "AWS Certified Solutions Architect – Associate (SAA-C03)": [
+                { q: "Which service provides a managed NAT gateway?", options: ["Internet Gateway", "NAT Gateway", "VPC Endpoint", "Egress-only IGW"], answer: 1, explanation: "NAT Gateway allows private subnet internet access." },
+                { q: "What is the most durable storage in AWS?", options: ["EBS", "Instance Store", "S3", "Glacier"], answer: 2, explanation: "S3 offers 11 9's durability." },
+                { q: "Which service auto-scales EC2 instances?", options: ["Auto Scaling Group", "ELB", "CloudFront", "Route 53"], answer: 0, explanation: "Auto Scaling Groups manage scaling." }
+            ],
+            "AWS Certified Developer – Associate (DVA-C02)": [
+                { q: "Which service runs code without servers?", options: ["EC2", "Lambda", "ECS", "EKS"], answer: 1, explanation: "AWS Lambda is serverless compute." },
+                { q: "Maximum Lambda execution time?", options: ["5 min", "15 min", "30 min", "1 hour"], answer: 1, explanation: "Lambda functions can run up to 15 minutes." },
+                { q: "Fully managed message queue?", options: ["SNS", "SQS", "EventBridge", "Kinesis"], answer: 1, explanation: "Amazon SQS is a message queue service." }
+            ],
+            "AWS Certified SysOps Administrator – Associate (SOA-C02)": [
+                { q: "Which service monitors resources and sets alarms?", options: ["CloudTrail", "CloudWatch", "Config", "Trusted Advisor"], answer: 1, explanation: "Amazon CloudWatch is for monitoring and alarms." },
+                { q: "Which service logs API calls?", options: ["CloudWatch", "CloudTrail", "X-Ray", "Inspector"], answer: 1, explanation: "AWS CloudTrail logs all API activity." },
+                { q: "How do you get best practice recommendations?", options: ["CloudWatch", "Trusted Advisor", "Inspector", "GuardDuty"], answer: 1, explanation: "AWS Trusted Advisor provides recommendations." }
+            ],
+            "AWS Certified DevOps Engineer – Professional (DOP-C03)": [
+                { q: "Which service orchestrates CI/CD pipelines?", options: ["CodeBuild", "CodeDeploy", "CodePipeline", "CodeStar"], answer: 2, explanation: "AWS CodePipeline automates release pipelines." },
+                { q: "What is infrastructure as code?", options: ["CloudFormation", "Elastic Beanstalk", "OpsWorks", "All of the above"], answer: 3, explanation: "All can be used, but CloudFormation is pure IaC." },
+                { q: "Which tool deploys to Lambda automatically?", options: ["SAM", "CDK", "Serverless Framework", "All of the above"], answer: 3, explanation: "All are valid deployment tools." }
+            ],
+            "AWS Certified Solutions Architect – Professional (SAP-C02)": [
+                { q: "Most cost-effective for unpredictable workloads?", options: ["Reserved Instances", "Savings Plans", "Spot Instances", "On-Demand"], answer: 2, explanation: "Spot Instances offer up to 90% savings." },
+                { q: "Which service provides multi-region active-active?", options: ["Route 53", "Global Accelerator", "CloudFront", "Direct Connect"], answer: 1, explanation: "AWS Global Accelerator improves performance." },
+                { q: "Best DR strategy with RPO < 1 min?", options: ["Pilot Light", "Warm Standby", "Multi-Site Active/Active", "Backup & Restore"], answer: 2, explanation: "Multi-site active/active provides near-zero RPO/RTO." }
+            ]
         };
-
-        // Sample questions (replace with full banks later)
-        Object.keys(certificationQuestions).forEach(key => {
-            if (certificationQuestions[key].length === 0) {
-                certificationQuestions[key] = [
-                    { q: "Sample Question 1", options: ["A", "B", "C", "D"], answer: 1, explanation: "This is correct because..." },
-                    { q: "Sample Question 2", options: ["A", "B", "C", "D"], answer: 2, explanation: "Explanation here" },
-                    { q: "Sample Question 3", options: ["A", "B", "C", "D"], answer: 0, explanation: "Correct answer is A" }
-                ];
-            }
-        });
 
         let selectedCert = null;
         let currentQuestions = [];
@@ -50,31 +67,18 @@
         let timerInterval = null;
         let timeUp = false;
         let reviewMode = false;
-
-        // Local Storage Keys
         const STORAGE_KEY = 'aws-practice-progress';
 
+        // Save / Load / Clear progress functions (same as before)
         function saveProgress() {
-            const progress = {
-                selectedCert,
-                currentQuestions,
-                userAnswers,
-                stats,
-                timeLeft,
-                timestamp: Date.now()
-            };
+            const progress = { selectedCert, currentQuestions, userAnswers, stats, timeLeft, timestamp: Date.now() };
             localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
         }
-
         function loadProgress() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (!saved) return false;
             const progress = JSON.parse(saved);
-            // Auto-resume only if within 24 hours
-            if (Date.now() - progress.timestamp > 24 * 60 * 60 * 1000) {
-                localStorage.removeItem(STORAGE_KEY);
-                return false;
-            }
+            if (Date.now() - progress.timestamp > 24*60*60*1000) { localStorage.removeItem(STORAGE_KEY); return false; }
             selectedCert = progress.selectedCert;
             currentQuestions = progress.currentQuestions;
             userAnswers = progress.userAnswers;
@@ -82,13 +86,10 @@
             timeLeft = progress.timeLeft;
             renderExamScreen();
             startTimer();
-            alert(`Welcome back! Your progress for "${selectedCert}" has been restored.`);
+            alert(`Welcome back! Resuming your ${selectedCert} exam.`);
             return true;
         }
-
-        function clearProgress() {
-            localStorage.removeItem(STORAGE_KEY);
-        }
+        function clearProgress() { localStorage.removeItem(STORAGE_KEY); }
 
         function prepareQuestions(certKey) {
             const allQ = certificationQuestions[certKey];
@@ -99,11 +100,8 @@
         function startExam(certName) {
             selectedCert = certName;
             prepareQuestions(certName);
-            userAnswers = {};
-            stats = { correct: 0, wrong: 0, answered: 0 };
-            timeLeft = 130 * 60;
-            timeUp = false;
-            reviewMode = false;
+            userAnswers = {}; stats = { correct: 0, wrong: 0, answered: 0 };
+            timeLeft = 130 * 60; timeUp = false; reviewMode = false;
             clearProgress();
             renderExamScreen();
             startTimer();
@@ -111,11 +109,8 @@
 
         function retryExam() {
             prepareQuestions(selectedCert);
-            userAnswers = {};
-            stats = { correct: 0, wrong: 0, answered: 0 };
-            timeLeft = 130 * 60;
-            timeUp = false;
-            reviewMode = false;
+            userAnswers = {}; stats = { correct: 0, wrong: 0, answered: 0 };
+            timeLeft = 130 * 60; timeUp = false; reviewMode = false;
             document.getElementById('resultModal').classList.add('hidden');
             renderExamScreen();
             startTimer();
@@ -128,19 +123,17 @@
                 timeLeft--;
                 updateTimerDisplay();
                 saveProgress();
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    timeUp = true;
-                    showResults();
-                }
+                if (timeLeft <= 0) { clearInterval(timerInterval); timeUp = true; showResults(); }
             }, 1000);
         }
 
         function updateTimerDisplay() {
-            if (!document.getElementById('timer')) return;
-            const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-            const s = String(timeLeft % 60).padStart(2, '0');
-            document.getElementById('timer').textContent = `${m}:${s}`;
+            const el = document.getElementById('timer');
+            if (el) {
+                const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+                const s = String(timeLeft % 60).padStart(2, '0');
+                el.textContent = `${m}:${s}`;
+            }
         }
 
         function selectAnswer(qIdx, optIdx) {
@@ -149,8 +142,7 @@
             const correct = optIdx === q.answer;
             userAnswers[qIdx] = optIdx;
             stats.answered++;
-            if (correct) stats.correct++;
-            else stats.wrong++;
+            if (correct) stats.correct++; else stats.wrong++;
             renderQuestion(qIdx);
             updateStats();
             saveProgress();
@@ -188,30 +180,25 @@
                 } else {
                     btnClass += 'border-gray-200 bg-gray-50 hover:border-purple-500 hover:bg-purple-50 cursor-pointer option-hover';
                 }
-
                 const labelCls = (reviewMode || timeUp) && isCorrect ? 'bg-green-600' : (reviewMode || timeUp) && selected && !isCorrect ? 'bg-red-600' : 'bg-purple-600';
-                const icon = (reviewMode || timeUp) && isCorrect ? 'Correct' :
-                             (reviewMode || timeUp) && selected && !isCorrect ? 'Incorrect' : '';
 
                 optionsHTML += `<button ${!reviewMode && !timeUp && !answered ? `onclick="selectAnswer(${idx},${i})"` : ''} class="${btnClass}" ${reviewMode || timeUp || answered ? 'disabled' : ''}>
                     <div class="w-11 h-11 rounded-full flex items-center justify-center font-bold text-white text-lg ${labelCls}">${String.fromCharCode(65+i)}</div>
                     <span class="text-gray-800 text-lg flex-1">${opt}</span>
-                    ${icon ? `<span class="ml-auto font-bold text-${isCorrect ? 'green' : 'red'}-600">${icon}</span>` : ''}
                 </button>`;
             });
 
             let expl = '';
             if (answered || reviewMode || timeUp) {
-                const color = correct ? 'green' : 'red';
-                expl = `<div class="mt-6 p-6 rounded-xl border-l-4 bg-${color}-50 border-${color}-500 animate-slide-down">
-                    <p class="mb-2 font-semibold text-${color}-700">${correct ? 'Correct Answer' : 'Incorrect'} → ${String.fromCharCode(65+q.answer)}) ${q.options[q.answer]}</p>
-                    <p><strong>Explanation:</strong> ${q.explanation}</p>
+                expl = `<div class="mt-6 p-6 rounded-xl border-l-4 bg-${correct ? 'green' : 'red'}-50 border-${correct ? 'green' : 'red'}-500">
+                    <p class="font-semibold">${correct ? 'Correct' : 'Incorrect'} → ${String.fromCharCode(65+q.answer)}) ${q.options[q.answer]}</p>
+                    <p class="mt-2"><strong>Explanation:</strong> ${q.explanation}</p>
                 </div>`;
             }
 
             el.innerHTML = `
                 <div class="flex items-start gap-5 mb-6">
-                    <div class="w-14 h-14 rounded-full ${correct ? 'bg-green-500' : answered ? 'bg-red-500' : 'bg-gradient-to-br from-purple-600 to-indigo-700'} text-white flex items-center justify-center font-bold text-xl flex-shrink-0">
+                    <div class="w-14 h-14 rounded-full ${correct ? 'bg-green-500' : answered ? 'bg-red-500' : 'bg-gradient-to-br from-purple-600 to-indigo-700'} text-white flex items-center justify-center font-bold text-xl">
                         ${idx+1}
                     </div>
                     <h3 class="text-xl font-semibold text-gray-800 leading-relaxed">${q.q}</h3>
@@ -236,17 +223,18 @@
         function showResults() {
             clearInterval(timerInterval);
             reviewMode = true;
-            renderAllQuestions(); // Show all answers
+            renderAllQuestions();
 
             const percentage = Math.round((stats.correct / currentQuestions.length) * 100);
-            const scaledScore = Math.round((stats.correct / currentQuestions.length) * 300 + 700); // AWS scale: 700–1000
+            const scaledScore = Math.round(700 + (stats.correct / currentQuestions.length) * 300);
 
             document.getElementById('finalScore').textContent = percentage + '%';
             document.getElementById('scaledScore').textContent = scaledScore;
             document.getElementById('finalCorrect').textContent = stats.correct;
             document.getElementById('finalWrong').textContent = currentQuestions.length - stats.correct;
-            document.getElementById('passStatus').textContent = scaledScore >= 720 ? 'PASSED' : 'FAILED';
-            document.getElementById('passStatus').className = scaledScore >= 720 ? 'text-green-600' : 'text-red-600';
+            const passStatusEl = document.getElementById('passStatus');
+            passStatusEl.textContent = scaledScore >= 720 ? 'PASSED' : 'FAILED';
+            passStatusEl.className = scaledScore >= 720 ? 'text-6xl font-bold text-green-600' : 'text-6xl font-bold text-red-600';
 
             document.getElementById('resultModal').classList.remove('hidden');
             document.getElementById('resultModal').classList.add('flex');
@@ -260,10 +248,11 @@
 
         function renderExamScreen() {
             document.getElementById('app').innerHTML = `
+                <!-- Same exam screen as before (stats, timer, questions, etc.) -->
                 <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h1 class="text-4xl font-bold text-purple-700">${selectedCert}</h1>
-                        <button onclick="backToHome()" class="text-purple-600 hover:underline text-lg font-medium">Back to Certifications</button>
+                        <button onclick="backToHome()" class="text-purple-600 hover:underline text-lg font-medium">Back</button>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-5">
                         <div class="bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold">${currentQuestions.length}</div><div class="text-sm opacity-90">Questions</div></div>
@@ -280,33 +269,26 @@
                 </div>
 
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-10 flex flex-wrap gap-5">
-                    <button onclick="scrollToNextUnanswered()" class="flex-1 bg-purple-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-purple-700 transition-all text-lg">Next Unanswered</button>
-                    <button onclick="showResults()" class="flex-1 bg-green-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-green-700 transition-all text-lg">Submit & Review</button>
+                    <button onclick="scrollToNextUnanswered()" class="flex-1 bg-purple-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-purple-700 text-lg">Next Unanswered</button>
+                    <button onclick="showResults()" class="flex-1 bg-green-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-green-700 text-lg">Submit & Review</button>
                 </div>
 
                 <div id="questionsContainer" class="space-y-10"></div>
 
-                <!-- Result Modal with Scaled Score + Review -->
                 <div id="resultModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
                     <div class="bg-white rounded-3xl p-12 max-w-2xl w-full text-center shadow-2xl animate-slide-up">
                         <h2 class="text-5xl font-bold text-purple-700 mb-6">Exam Completed!</h2>
                         <div class="text-9xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent mb-4" id="finalScore">0%</div>
-                        <div class="text-6xl font-bold mb-8" id="scaledScore">0</div>
-                        <div class="text-5xl font-bold mb-8" id="passStatus">PENDING</div>
-                        <div class="text-xl text-gray-600 mb-10">Passing Score: 720/1000</div>
-
+                        <div class="text-6xl font-bold mb-4" id="scaledScore">0</div>
+                        <div id="passStatus" class="text-6xl font-bold mb-8">PENDING</div>
+                        <div class="text-xl text-gray-600 mb-10">Passing score: 720/1000</div>
                         <div class="grid grid-cols-2 gap-10 mb-12">
                             <div class="bg-green-50 p-8 rounded-3xl"><div class="text-6xl font-bold text-green-600" id="finalCorrect">0</div><div class="text-gray-600 text-xl mt-2">Correct</div></div>
                             <div class="bg-red-50 p-8 rounded-3xl"><div class="text-6xl font-bold text-red-600" id="finalWrong">0</div><div class="text-gray-600 text-xl mt-2">Wrong</div></div>
                         </div>
-
                         <div class="space-y-4">
-                            <button onclick="retryExam()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white text-xl py-5 rounded-xl font-bold hover:opacity-90 transition-all">
-                                Retry This Exam
-                            </button>
-                            <button onclick="backToHome()" class="w-full bg-gray-600 text-white text-xl py-5 rounded-xl font-bold hover:bg-gray-700 transition-all">
-                                Choose Another Certification
-                            </button>
+                            <button onclick="retryExam()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white text-xl py-5 rounded-xl font-bold hover:opacity-90">Retry This Exam</button>
+                            <button onclick="backToHome()" class="w-full bg-gray-600 text-white text-xl py-5 rounded-xl font-bold hover:bg-gray-700">Choose Another Certification</button>
                         </div>
                     </div>
                 </div>
@@ -315,22 +297,13 @@
             updateStats();
         }
 
-        function scrollToNextUnanswered() {
-            for (let i = 0; i < currentQuestions.length; i++) {
-                if (userAnswers[i] === undefined) {
-                    document.getElementById(`question-${i}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    return;
-                }
-            }
-        }
-
         function getHomeHTML() {
             return `
                 <div class="text-center py-16">
                     <h1 class="text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">AWS Certification Practice Tests</h1>
-                    <p class="text-2xl md:text-3xl text-purple-100 mb-20 max-w-4xl mx-auto">Real exam experience • 130-minute timer • 720/1000 passing score • Progress saved automatically</p>
+                    <p class="text-2xl md:text-3xl text-purple-100 mb-20 max-w-4xl mx-auto">Real exam experience • 130-minute timer • 720/1000 passing score</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto px-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto px-6">
                         ${Object.keys(certificationQuestions).map(cert => `
                             <div onclick="startExam('${cert}')" class="cert-card bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-10 text-center group">
                                 <div class="w-28 h-28 mx-auto mb-8 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -340,9 +313,7 @@
                                 </div>
                                 <h3 class="text-2xl font-bold text-gray-800 mb-2">${cert.split(' (')[0]}</h3>
                                 <p class="text-purple-600 font-bold text-xl mb-6">${cert.match(/\((.*?)\)/)[0]}</p>
-                                <div class="text-purple-600 font-bold text-xl opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Start Practice
-                                </div>
+                                <div class="text-purple-600 font-bold text-xl opacity-0 group-hover:opacity-100 transition-opacity">Start Practice</div>
                             </div>
                         `).join('')}
                     </div>
@@ -350,7 +321,7 @@
             `;
         }
 
-        // On load: Try to resume previous session
+        // Load page
         window.onload = () => {
             if (!loadProgress()) {
                 document.getElementById('app').innerHTML = getHomeHTML();
