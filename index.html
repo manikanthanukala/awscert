@@ -9,19 +9,19 @@
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
         .animate-slide-down { animation: slideDown 0.3s ease-out; }
-        .animate-slide-up { animation: slideUp 0.3s ease-out; }
+        .animate-slide-up { animation: slideUp 0.6s ease-out; }
         .option-hover:hover { transform: translateX(5px); }
         .cert-card {
-            transition: all 0.4s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }
         .cert-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            transform: translateY(-16px) scale(1.03);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 min-h-screen">
+<body class="bg-gradient-to-br from-indigo-600 via-purple-700 to-pink-600 min-h-screen">
     <div id="app" class="container mx-auto px-4 py-6 max-w-7xl"></div>
 
     <script>
@@ -79,6 +79,18 @@
             stats = { correct: 0, wrong: 0, answered: 0 };
             timeLeft = 130 * 60;
             timeUp = false;
+            renderExamScreen();
+            startTimer();
+        }
+
+        function retryExam() {
+            // Same as startExam but reuse the current selectedCert
+            prepareQuestions(selectedCert);
+            userAnswers = {};
+            stats = { correct: 0, wrong: 0, answered: 0 };
+            timeLeft = 130 * 60;
+            timeUp = false;
+            document.getElementById('resultModal').classList.add('hidden');
             renderExamScreen();
             startTimer();
         }
@@ -145,11 +157,11 @@
                     btnClass += 'border-gray-200 bg-gray-50 hover:border-purple-500 hover:bg-purple-50 cursor-pointer option-hover';
                 }
                 const labelCls = answered && isCorrect ? 'bg-green-600' : answered && selected ? 'bg-red-600' : 'bg-purple-600';
-                const icon = answered && isCorrect ? '<svg class="ml-auto text-green-600 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>' :
-                             answered && selected ? '<svg class="ml-auto text-red-600 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>' : '';
+                const icon = answered && isCorrect ? '<svg class="ml-auto w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' :
+                             answered && selected ? '<svg class="ml-auto w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>' : '';
 
                 optionsHTML += `<button onclick="selectAnswer(${idx},${i})" class="${btnClass}" ${answered ? 'disabled' : ''}>
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${labelCls}">${String.fromCharCode(65+i)}</div>
+                    <div class="w-11 h-11 rounded-full flex items-center justify-center font-bold text-white text-lg ${labelCls}">${String.fromCharCode(65+i)}</div>
                     <span class="text-gray-800 text-lg flex-1">${opt}</span>${icon}
                 </button>`;
             });
@@ -158,18 +170,18 @@
             if (answered) {
                 const color = correct ? 'green' : 'red';
                 expl = `<div class="mt-6 p-6 rounded-xl border-l-4 bg-${color}-50 border-${color}-500 animate-slide-down">
-                    <div class="flex items-center gap-2 mb-3 text-${color}-600"><strong class="text-xl">${correct ? 'Correct' : 'Incorrect'}</strong></div>
+                    <p class="mb-2 font-semibold text-${color}-700">${correct ? 'Correct!' : 'Incorrect'}</p>
                     <p class="mb-2"><strong>Correct Answer:</strong> ${String.fromCharCode(65+q.answer)}) ${q.options[q.answer]}</p>
                     <p><strong>Explanation:</strong> ${q.explanation}</p>
                 </div>`;
             }
 
             el.innerHTML = `
-                <div class="flex items-start gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-indigo-700 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">${idx+1}</div>
+                <div class="flex items-start gap-5 mb-6">
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-indigo-700 text-white flex items-center justify-center font-bold text-xl flex-shrink-0">${idx+1}</div>
                     <h3 class="text-xl font-semibold text-gray-800 leading-relaxed">${q.q}</h3>
                 </div>
-                <div class="space-y-3">${optionsHTML}</div>
+                <div class="space-y-4">${optionsHTML}</div>
                 ${expl}
             `;
         }
@@ -215,10 +227,10 @@
             document.getElementById('app').innerHTML = `
                 <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
                     <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-3xl font-bold text-purple-700">${selectedCert}</h1>
-                        <button onclick="backToHome()" class="text-purple-600 hover:underline text-lg">Back to Certifications</button>
+                        <h1 class="text-4xl font-bold text-purple-700">${selectedCert}</h1>
+                        <button onclick="backToHome()" class="text-purple-600 hover:underline text-lg font-medium">Back to Certifications</button>
                     </div>
-                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-5">
                         <div class="bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold">${currentQuestions.length}</div><div class="text-sm opacity-90">Questions</div></div>
                         <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold" id="correctCount">0</div><div class="text-sm opacity-90">Correct</div></div>
                         <div class="bg-gradient-to-br from-red-500 to-red-600 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold" id="wrongCount">0</div><div class="text-sm opacity-90">Wrong</div></div>
@@ -227,29 +239,35 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-5 mb-6">
-                    <div class="flex justify-between mb-2 text-gray-700 font-semibold"><span>Progress</span><span id="progressText">0/${currentQuestions.length}</span></div>
-                    <div class="h-5 bg-gray-200 rounded-full overflow-hidden"><div id="progressFill" class="h-full bg-gradient-to-r from-purple-600 to-indigo-700 transition-all duration-500" style="width:0%"></div></div>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <div class="flex justify-between mb-3 text-gray-700 font-semibold"><span>Progress</span><span id="progressText">0/${currentQuestions.length}</span></div>
+                    <div class="h-6 bg-gray-200 rounded-full overflow-hidden"><div id="progressFill" class="h-full bg-gradient-to-r from-purple-600 to-indigo-700 transition-all duration-500" style="width:0%"></div></div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-5 mb-8 flex flex-wrap gap-4">
-                    <button onclick="scrollToNextUnanswered()" class="flex-1 min-w-fit bg-purple-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-purple-700 transition-all">Next Unanswered</button>
-                    <button onclick="showResults()" class="flex-1 min-w-fit bg-green-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-green-700 transition-all">Submit & See Results</button>
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-10 flex flex-wrap gap-5">
+                    <button onclick="scrollToNextUnanswered()" class="flex-1 bg-purple-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-purple-700 transition-all text-lg">Next Unanswered</button>
+                    <button onclick="showResults()" class="flex-1 bg-green-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-green-700 transition-all text-lg">Submit & See Results</button>
                 </div>
 
-                <div id="questionsContainer" class="space-y-8"></div>
+                <div id="questionsContainer" class="space-y-10"></div>
 
+                <!-- Result Modal with Retry Option -->
                 <div id="resultModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
                     <div class="bg-white rounded-3xl p-12 max-w-lg w-full text-center shadow-2xl animate-slide-up">
                         <h2 class="text-5xl font-bold text-purple-700 mb-6">Exam Completed!</h2>
-                        <div class="text-8xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent mb-6" id="finalScore">0%</div>
-                        <div class="grid grid-cols-2 gap-8 mb-10">
-                            <div class="bg-green-50 p-6 rounded-2xl"><div class="text-5xl font-bold text-green-600" id="finalCorrect">0</div><div class="text-gray-600 text-lg">Correct</div></div>
-                            <div class="bg-red-50 p-6 rounded-2xl"><div class="text-5xl font-bold text-red-600" id="finalWrong">0</div><div class="text-gray-600 text-lg">Wrong</div></div>
+                        <div class="text-9xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent mb-8" id="finalScore">0%</div>
+                        <div class="grid grid-cols-2 gap-10 mb-12">
+                            <div class="bg-green-50 p-8 rounded-3xl"><div class="text-6xl font-bold text-green-600" id="finalCorrect">0</div><div class="text-gray-600 text-xl mt-2">Correct</div></div>
+                            <div class="bg-red-50 p-8 rounded-3xl"><div class="text-6xl font-bold text-red-600" id="finalWrong">0</div><div class="text-gray-600 text-xl mt-2">Wrong</div></div>
                         </div>
-                        <button onclick="backToHome()" class="w-full bg-purple-600 text-white text-xl py-5 rounded-xl font-bold hover:bg-purple-700 transition-all">
-                            Choose Another Certification
-                        </button>
+                        <div class="space-y-4">
+                            <button onclick="retryExam()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-700 text-white text-xl py-5 rounded-xl font-bold hover:opacity-90 transition-all">
+                                Retry This Exam
+                            </button>
+                            <button onclick="backToHome()" class="w-full bg-gray-600 text-white text-xl py-5 rounded-xl font-bold hover:bg-gray-700 transition-all">
+                                Choose Another Certification
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -260,20 +278,22 @@
         function getHomeHTML() {
             return `
                 <div class="text-center py-16">
-                    <h1 class="text-6xl font-bold text-white mb-6 drop-shadow-lg">AWS Certification Practice Tests</h1>
-                    <p class="text-2xl text-purple-100 mb-16">Select your certification and start practicing with real exam-style questions</p>
+                    <h1 class="text-6xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">AWS Certification Practice Tests</h1>
+                    <p class="text-2xl md:text-3xl text-purple-100 mb-20 max-w-4xl mx-auto">Real exam-style questions • 130-minute timer • Instant feedback</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto px-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto px-6">
                         ${Object.keys(certificationQuestions).map(cert => `
-                            <div onclick="startExam('${cert}')" class="cert-card bg-white rounded-3xl shadow-2xl p-10 text-center transform hover:scale-105">
-                                <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl flex items-center justify-center">
+                            <div onclick="startExam('${cert}')" class="cert-card bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-10 text-center group">
+                                <div class="w-28 h-28 mx-auto mb-8 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-3xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                     <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
                                     </svg>
                                 </div>
-                                <h3 class="text-2xl font-bold text-gray-800 mb-3">${cert.split(' (')[0]}</h3>
-                                <p class="text-purple-600 font-semibold text-lg">${cert.match(/\((.*?)\)/)[0]}</p>
-                                <p class="mt-6 text-purple-600 font-bold text-xl">Start Practice →</p>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-2">${cert.split(' (')[0]}</h3>
+                                <p class="text-purple-600 font-bold text-xl mb-6">${cert.match(/\((.*?)\)/)[0]}</p>
+                                <div class="text-purple-600 font-bold text-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Start Practice →
+                                </div>
                             </div>
                         `).join('')}
                     </div>
@@ -281,7 +301,7 @@
             `;
         }
 
-        // Load home screen
+        // Initial load
         document.getElementById('app').innerHTML = getHomeHTML();
     </script>
 </body>
