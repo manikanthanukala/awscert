@@ -11,14 +11,20 @@
         .animate-slide-down { animation: slideDown 0.3s ease-out; }
         .animate-slide-up { animation: slideUp 0.3s ease-out; }
         .option-hover:hover { transform: translateX(5px); }
-        .cert-card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); }
+        .cert-card {
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        .cert-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 min-h-screen">
-    <div id="app" class="container mx-auto px-4 py-6 max-w-4xl"></div>
+    <div id="app" class="container mx-auto px-4 py-6 max-w-7xl"></div>
 
     <script>
-        // Full question bank per certification (you can expand later)
         const certificationQuestions = {
             "AWS Certified Cloud Practitioner (CLF-C02)": [
                 { q: "What is the AWS shared responsibility model?", options: ["AWS manages everything", "Customer manages everything", "AWS manages security OF the cloud, customer manages security IN the cloud", "Shared equally"], answer: 2, explanation: "AWS is responsible for security OF the cloud, customers for security IN the cloud." },
@@ -60,7 +66,6 @@
         let timerInterval = null;
         let timeUp = false;
 
-        // Shuffle and pick 65 questions (or all if less than 65)
         function prepareQuestions(certKey) {
             const allQ = certificationQuestions[certKey];
             const shuffled = [...allQ].sort(() => 0.5 - Math.random());
@@ -93,9 +98,10 @@
         }
 
         function updateTimerDisplay() {
+            if (!document.getElementById('timer')) return;
             const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
             const s = String(timeLeft % 60).padStart(2, '0');
-            document.getElementById('timer') && (document.getElementById('timer').textContent = `${m}:${s}`);
+            document.getElementById('timer').textContent = `${m}:${s}`;
         }
 
         function selectAnswer(qIdx, optIdx) {
@@ -139,21 +145,20 @@
                     btnClass += 'border-gray-200 bg-gray-50 hover:border-purple-500 hover:bg-purple-50 cursor-pointer option-hover';
                 }
                 const labelCls = answered && isCorrect ? 'bg-green-600' : answered && selected ? 'bg-red-600' : 'bg-purple-600';
-                const icon = answered && isCorrect ? '<svg class="ml-auto text-green-600" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>' :
-                             answered && selected ? '<svg class="ml-auto text-red-600" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' : '';
+                const icon = answered && isCorrect ? '<svg class="ml-auto text-green-600 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>' :
+                             answered && selected ? '<svg class="ml-auto text-red-600 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>' : '';
 
                 optionsHTML += `<button onclick="selectAnswer(${idx},${i})" class="${btnClass}" ${answered ? 'disabled' : ''}>
-                    <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-white ${labelCls}">${String.fromCharCode(65+i)}</div>
-                    <span class="text-gray-800 text-lg">${opt}</span>${icon}
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${labelCls}">${String.fromCharCode(65+i)}</div>
+                    <span class="text-gray-800 text-lg flex-1">${opt}</span>${icon}
                 </button>`;
             });
 
             let expl = '';
             if (answered) {
                 const color = correct ? 'green' : 'red';
-                const icon = correct ? 'Correct!' : 'Incorrect';
                 expl = `<div class="mt-6 p-6 rounded-xl border-l-4 bg-${color}-50 border-${color}-500 animate-slide-down">
-                    <div class="flex items-center gap-2 mb-3"><span class="text-2xl">${correct ? 'Correct' : 'Incorrect'}</span><strong>${icon}</strong></div>
+                    <div class="flex items-center gap-2 mb-3 text-${color}-600"><strong class="text-xl">${correct ? 'Correct' : 'Incorrect'}</strong></div>
                     <p class="mb-2"><strong>Correct Answer:</strong> ${String.fromCharCode(65+q.answer)}) ${q.options[q.answer]}</p>
                     <p><strong>Explanation:</strong> ${q.explanation}</p>
                 </div>`;
@@ -209,16 +214,16 @@
         function renderExamScreen() {
             document.getElementById('app').innerHTML = `
                 <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
-                    <div class="flex justify-between items-center mb-4">
+                    <div class="flex justify-between items-center mb-6">
                         <h1 class="text-3xl font-bold text-purple-700">${selectedCert}</h1>
-                        <button onclick="backToHome()" class="text-purple-600 hover:underline">← Back</button>
+                        <button onclick="backToHome()" class="text-purple-600 hover:underline text-lg">Back to Certifications</button>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                        <div class="bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-4 rounded-xl text-center"><div class="text-3xl font-bold">${currentQuestions.length}</div><div class="text-sm opacity-90">Questions</div></div>
-                        <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-xl text-center"><div class="text-3xl font-bold" id="correctCount">0</div><div class="text-sm opacity-90">Correct</div></div>
-                        <div class="bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-xl text-center"><div class="text-3xl font-bold" id="wrongCount">0</div><div class="text-sm opacity-90">Wrong</div></div>
-                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl text-center"><div class="text-3xl font-bold" id="scorePercent">0%</div><div class="text-sm opacity-90">Score</div></div>
-                        <div class="bg-gradient-to-br from-yellow-500 to-orange-600 text-white p-4 rounded-xl text-center"><div class="text-3xl font-bold" id="timer">130:00</div><div class="text-sm opacity-90">Time Left</div></div>
+                        <div class="bg-gradient-to-br from-purple-600 to-indigo-700 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold">${currentQuestions.length}</div><div class="text-sm opacity-90">Questions</div></div>
+                        <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold" id="correctCount">0</div><div class="text-sm opacity-90">Correct</div></div>
+                        <div class="bg-gradient-to-br from-red-500 to-red-600 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold" id="wrongCount">0</div><div class="text-sm opacity-90">Wrong</div></div>
+                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold" id="scorePercent">0%</div><div class="text-sm opacity-90">Score</div></div>
+                        <div class="bg-gradient-to-br from-yellow-500 to-orange-600 text-white p-5 rounded-xl text-center"><div class="text-3xl font-bold" id="timer">130:00</div><div class="text-sm opacity-90">Time Left</div></div>
                     </div>
                 </div>
 
@@ -227,25 +232,24 @@
                     <div class="h-5 bg-gray-200 rounded-full overflow-hidden"><div id="progressFill" class="h-full bg-gradient-to-r from-purple-600 to-indigo-700 transition-all duration-500" style="width:0%"></div></div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-5 mb-6 flex flex-wrap gap-3">
-                    <button onclick="scrollToNextUnanswered()" class="flex-1 bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-all">Next Unanswered</button>
-                    <button onclick="showResults()" class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-all">Show Results</button>
+                <div class="bg-white rounded-xl shadow-lg p-5 mb-8 flex flex-wrap gap-4">
+                    <button onclick="scrollToNextUnanswered()" class="flex-1 min-w-fit bg-purple-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-purple-700 transition-all">Next Unanswered</button>
+                    <button onclick="showResults()" class="flex-1 min-w-fit bg-green-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-green-700 transition-all">Submit & See Results</button>
                 </div>
 
-                <div id="questionsContainer" class="space-y-6"></div>
+                <div id="questionsContainer" class="space-y-8"></div>
 
                 <div id="resultModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-                    <div class="bg-white rounded-3xl p-10 max-w-md w-full text-center shadow-2xl animate-slide-up">
-                        <div class="text-6xl mb-4">Trophy</div>
-                        <h2 class="text-4xl font-bold text-purple-700 mb-4">Exam Finished!</h2>
-                        <div id="finalScore" class="text-7xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent my-6">0%</div>
-                        <div class="flex gap-6 justify-center mb-8">
-                            <div class="bg-green-50 p-5 rounded-xl"><div id="finalCorrect" class="text-4xl font-bold text-green-600">0</div><div class="text-gray-600">Correct</div></div>
-                            <div class="bg-red-50 p-5 rounded-xl"><div id="finalWrong" class="text-4xl font-bold text-red-600">0</div><div class="text-gray-600">Wrong</div></div>
+                    <div class="bg-white rounded-3xl p-12 max-w-lg w-full text-center shadow-2xl animate-slide-up">
+                        <h2 class="text-5xl font-bold text-purple-700 mb-6">Exam Completed!</h2>
+                        <div class="text-8xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent mb-6" id="finalScore">0%</div>
+                        <div class="grid grid-cols-2 gap-8 mb-10">
+                            <div class="bg-green-50 p-6 rounded-2xl"><div class="text-5xl font-bold text-green-600" id="finalCorrect">0</div><div class="text-gray-600 text-lg">Correct</div></div>
+                            <div class="bg-red-50 p-6 rounded-2xl"><div class="text-5xl font-bold text-red-600" id="finalWrong">0</div><div class="text-gray-600 text-lg">Wrong</div></div>
                         </div>
-                        <div class="space-y-3">
-                            <button onclick="backToHome()" class="w-full bg-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-purple-700">Choose Another Exam</button>
-                        </div>
+                        <button onclick="backToHome()" class="w-full bg-purple-600 text-white text-xl py-5 rounded-xl font-bold hover:bg-purple-700 transition-all">
+                            Choose Another Certification
+                        </button>
                     </div>
                 </div>
             `;
@@ -255,17 +259,21 @@
 
         function getHomeHTML() {
             return `
-                <div class="text-center py-12">
-                    <h1 class="text-5xl font-bold text-white mb-4">AWS Certification Practice Tests</h1>
-                    <p class="text-xl text-purple-100 mb-12">Choose your certification and start practicing now!</p>
+                <div class="text-center py-16">
+                    <h1 class="text-6xl font-bold text-white mb-6 drop-shadow-lg">AWS Certification Practice Tests</h1>
+                    <p class="text-2xl text-purple-100 mb-16">Select your certification and start practicing with real exam-style questions</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto px-6">
                         ${Object.keys(certificationQuestions).map(cert => `
-                            <div onclick="startExam('${cert}')" class="cert-card bg-white rounded-2xl shadow-2xl p-8 cursor-pointer transition-all">
-                                <div class="text-6xl mb-4 text-center">Certificate</div>
-                                <h3 class="text-2xl font-bold text-purple-700 mb-3">${cert.split('(')[0].trim()}</h3>
-                                <p class="text-gray-600 text-sm">${cert.match(/\((.*?)\)/)[0]}</p>
-                                <p class="mt-6 text-purple-600 font-semibold">Start Practice →</p>
+                            <div onclick="startExam('${cert}')" class="cert-card bg-white rounded-3xl shadow-2xl p-10 text-center transform hover:scale-105">
+                                <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl flex items-center justify-center">
+                                    <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-3">${cert.split(' (')[0]}</h3>
+                                <p class="text-purple-600 font-semibold text-lg">${cert.match(/\((.*?)\)/)[0]}</p>
+                                <p class="mt-6 text-purple-600 font-bold text-xl">Start Practice →</p>
                             </div>
                         `).join('')}
                     </div>
@@ -273,7 +281,7 @@
             `;
         }
 
-        // Initial load - show certification selection
+        // Load home screen
         document.getElementById('app').innerHTML = getHomeHTML();
     </script>
 </body>
